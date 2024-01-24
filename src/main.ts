@@ -32,10 +32,7 @@ const camera = new THREE.PerspectiveCamera(
   500
 );
 camera.position.y += 10;
-
-const x : JsonBobina = JSON.parse(
-  '{ "id": 1,"floorId": 1,"position": { "x": 55, "y": 55 },"base": 0.5,"height": 0.5,"depth": 0.5,"rotation": 1,"isStanding": false}'
-);
+const x = new JsonBobina(JSON.parse('{ "id": 1,"floorId": 1,"position": { "x": 55, "y": 55 },"base": 0.5,"height": 0.5,"depth": 0.5,"rotation": 1,"isStanding": false}'));
 const path : string = "./models/Bobina.glb";
 
 const defaultBobinaModel: THREE.Object3D = await Utilities.loadGLTF(path);
