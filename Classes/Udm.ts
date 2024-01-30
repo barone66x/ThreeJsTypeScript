@@ -21,26 +21,28 @@ export class Udm {
         }
     }
 
-    public  MoveTo(position : THREE.Vector3, rotation: number) : void{
+    public getId() : number{
+        return this.id
+    }
+
+    public MoveTo(position : THREE.Vector3, rotation: number) : void{
         this.model.setPosition(position);
         this.model.setRotation(rotation);
     }
 
-    public  setHighlightOn() : void{
+    public setHighlightOn() : void{
         this.model.setHightlightOn();
     }
 
-    public  setHighlightOff() : void{
+    public setHighlightOff() : void{
         this.model.setHightlightOff();
     }
 
     public show() : void{
         this.model.show();
     }
+
     public hide() : void{
         this.model.hide();
-
-    }
-    
+    }   
 }
-
