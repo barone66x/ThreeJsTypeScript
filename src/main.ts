@@ -2,6 +2,7 @@ import "./style.css";
 import * as THREE from "three";
 import {Bobina,JsonBobina} from  "../Classes/Bobina.ts";
 import {Utilities} from "../Classes/Utilities.ts";
+
 // import { pointInPolygon } from "detect-collisions";
 // import * as dc from "detect-collisions";
 
@@ -10,6 +11,14 @@ const res = {
   width: window.innerWidth,
   height: window.innerHeight,
 };
+
+let http = require('http')
+
+http.createServer(function (req : any, res : any) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.write('Hello World!');
+  res.end();
+}).listen(8080);
 
 
 
