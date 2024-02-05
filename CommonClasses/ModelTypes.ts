@@ -4,7 +4,5 @@ export enum ModelTypes{
     Rack,
     ForkLift,
     Fork,
-    Area,
-    SubArea1,
-    SubArea2
+    Area
 }
