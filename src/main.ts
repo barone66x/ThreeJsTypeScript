@@ -26,15 +26,4 @@ camera.lookAt(0, 0, 0);
 const box = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial());
 scene.add(box);
 
-document.body.appendChild(renderer.domElement);
-requestAnimationFrame(animate);
 
-function animate(): void {
-  renderer.render(scene, camera);
-  // box.position.x = Math.sin(Date.now() / 1000) * 5;
-  // box.position.y = Math.sin(Date.now() / 1000) * 5;
-  // box.position.z = Math.sin(Date.now() / 1000) * 5;
-  box.rotation.z += 0.0055;
-  console.log(box.position.x + " " + box.position.z + " " + box.position.y);
-  requestAnimationFrame(animate);
-}
