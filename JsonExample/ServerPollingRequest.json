@@ -1,0 +1,12 @@
+{
+  "ForkLiftInformation": {
+    "position": {
+      "x": 1,
+      "y": 1
+    },
+    "rotation": 0,
+    "forkHeight": 0,
+    "isForkLoaded":false,
+    "forkLoadDistance": 1
+  }
+}

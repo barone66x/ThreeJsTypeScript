@@ -1,0 +1,67 @@
+{
+  "nearestUdms": [
+    {
+      "id": 1,
+      "type": "coil",
+      "position": {
+        "x": 1,
+        "y": 1,
+        "z": 1
+      },
+      "size": {
+        "x": 1,
+        "z": 1,
+        "y": 1
+      },
+      "rotation": 0
+    },
+    {
+      "id": 2,
+      "type": "pallet",
+      "position": {
+        "x": 0,
+        "y": 10,
+        "z": 10
+      },
+      "size": {
+        "x": 1,
+        "z": 2,
+        "y": 1
+      },
+      "rotation": 90
+    }
+  ],
+  "collidedAreas": [
+    {
+      "id": 1,
+      "name": "lorem ipsum",
+      "description": "lorem ipsum"
+    }
+  ],
+  "highlightedUdms": [
+    {
+      "id": 1,
+      "code": "1111aaaaaa",
+      "description": "lorem ipsum",
+      "type": "coil",
+      "size": {
+        "x": 1,
+        "z": 2,
+        "y": 1
+      }
+    }
+  ],
+  "loadedUdms":[
+    {
+        "id": 5,
+        "code": "1111aaaaaa",
+        "description": "lorem ipsum",
+        "type": "coil",
+        "size": {
+          "x": 1,
+          "z": 2,
+          "y": 1
+        } 
+    }
+  ]
+}
