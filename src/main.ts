@@ -9,7 +9,7 @@ import { ForkLift } from "../FinalSolution/ForkLift";
 import { Fork } from "../FinalSolution/Fork";
 import { Model } from "../FinalSolution/Model";
 
-const sceneManager = new SceneManager();
+const sceneManager = new SceneManager(1.5);
 document.body.appendChild(sceneManager.getHTMLCanvas());
 sceneManager.startAnimating();
 
@@ -31,6 +31,5 @@ initialJson.areas.forEach((area) => {
 });
 
 
-console.log(sceneManager);
 
 window.addEventListener("resize", () => (sceneManager.onWindowResize()));

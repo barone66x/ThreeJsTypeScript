@@ -11,8 +11,9 @@ export class CameraManager {
     const width = window.innerWidth;
 
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-    camera.position.z = 50;
+    camera.position.z = 30;
     camera.lookAt(0, 0, 0);
+    camera.position.x = 10;
     
     this.camerasList = [camera];
     this.currentCameraIndex = 0;

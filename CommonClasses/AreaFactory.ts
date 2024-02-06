@@ -42,6 +42,7 @@ export class AreaFactory {
     const geometry = new THREE.ShapeGeometry(shape);
 
     const mesh = new THREE.Mesh(geometry, this.textureDictionary[subLevel]);
+    mesh.name = subLevel.toString();
     mesh.position.z += 0.01 * subLevel;
     mesh.matrixAutoUpdate = false;
     mesh.castShadow = false;
