@@ -2,14 +2,39 @@ import * as THREE from "three";
 
 export class CameraManager {
   private camerasList: Array<THREE.PerspectiveCamera>;
-  private currentCamera: THREE.Camera;
   private currentCameraIndex: number;
 
-  public constructor(camerasList: THREE.PerspectiveCamera[]) {
-    this.camerasList = camerasList;
+  public constructor();
+  public constructor(camerasList: THREE.PerspectiveCamera[]);
+  public constructor(camerasList?: THREE.PerspectiveCamera[]) {
+    const height = window.innerHeight;
+    const width = window.innerWidth;
+
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
+    camera.position.z = 50;
+    camera.lookAt(0, 0, 0);
+    
+    this.camerasList = [camera];
     this.currentCameraIndex = 0;
-    if (this.camerasList.length == 0) {
-      throw new Error();
+    if (camerasList && camerasList.length > 0) {
+      this.camerasList = camerasList;
+    }
+  }
+
+  public startSelfDestruct() {
+    setInterval(() => {
+      this.camerasList[this.currentCameraIndex].position.z += 100;
+      console.log(this.camerasList[this.currentCameraIndex].position.z)
+    }, 100);
+  }
+
+  public addCamera(newCamera: THREE.PerspectiveCamera): void {
+    this.currentCameraIndex = this.camerasList.push(newCamera) - 1;
+  }
+  public removeCamera(camera: THREE.PerspectiveCamera): void {
+    const index = this.camerasList.indexOf(camera);
+    if (index >= 0) {
+      this.camerasList.splice(index, 1);
     }
   }
 
@@ -18,20 +43,18 @@ export class CameraManager {
     if (this.currentCameraIndex == this.camerasList.length) {
       this.currentCameraIndex = 0;
     }
-    this.currentCamera = this.camerasList[this.currentCameraIndex];
   }
 
-  public getCurrentCamera(): THREE.Camera {
-    return this.currentCamera;
+  public getCurrentCamera(): THREE.PerspectiveCamera {
+    return this.camerasList[this.currentCameraIndex];
   }
 
   public onWindowResize(): void {
     const height = window.innerHeight;
     const width = window.innerWidth;
-    this.camerasList.forEach(camera => {
-        camera.aspect = width / height;
-        camera.updateProjectionMatrix();
-    })
-    
+    this.camerasList.forEach((camera) => {
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+    });
   }
 }

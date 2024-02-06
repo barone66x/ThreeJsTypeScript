@@ -5,8 +5,15 @@ import { AbsObject } from "./AbsObject";
 import { Model } from "./Model";
 
 export class UDM extends AbsObject implements IMovable, IHighlightable {
+  private id: number;
+
   public constructor(model: Model, id: number, initialPosition: Point3d, initialRotation: number) {
-    super(model, id, initialPosition, initialRotation);
+    super(model, initialPosition, initialRotation);
+    this.id = id;
+  }
+
+  public getId(): number {
+    return this.id;
   }
 
   public moveTo(position: Point3d, rotation: number): void {

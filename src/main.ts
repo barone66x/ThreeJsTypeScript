@@ -1,29 +1,36 @@
 import "./style.css";
-import * as THREE from "three";
+import { SceneManager } from "../CommonClasses/SceneManager";
+import { InitialConfigResponse } from "../CommonClasses/JsonResponses";
 
-const res = {
-  // imposto risoluzione iniziale
-  width: window.innerWidth,
-  height: window.innerHeight,
-};
+import { AreaFactory } from "../CommonClasses/AreaFactory";
+import { ModelFactory } from "../CommonClasses/ModelFactory";
+import { Area } from "../FinalSolution/Area";
+import { ForkLift } from "../FinalSolution/ForkLift";
+import { Fork } from "../FinalSolution/Fork";
+import { Model } from "../FinalSolution/Model";
 
-const renderer = new THREE.WebGLRenderer({ logarithmicDepthBuffer: true });
-renderer.setPixelRatio(2);
-renderer.setSize(res.width, res.height);
+const sceneManager = new SceneManager();
+document.body.appendChild(sceneManager.getHTMLCanvas());
+sceneManager.startAnimating();
 
-const scene = new THREE.Scene();
-// scene.rotation.order = "YXZ";
-// scene.rotation.y = Math.PI;
-// scene.rotation.x = Math.PI / 2;
-scene.background = new THREE.Color(0x95ecfc);
-scene.add(new THREE.AmbientLight());
-scene.up = new THREE.Vector3( 0, 0, 1 );
+let initialJson = (await (await fetch("JsonExample/InitialConfigResponse.json")).json()) as InitialConfigResponse;
 
-const camera = new THREE.PerspectiveCamera(90, res.width / res.height, 0.1, 500);
-camera.position.z = 10;
-camera.lookAt(0, 0, 0);
+const areaFactory = new AreaFactory();
+initialJson.modelsAndTextures.areaTextures.forEach((area) => {
+  areaFactory.addAreaModel(area.subLevel, area.path);
+});
 
-const box = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial());
-scene.add(box);
+initialJson.floors.forEach((floor) => {
+  const newArea = new Area(areaFactory.makeArea(0, floor.p1, floor.p2, floor.p3, floor.p4));
+  sceneManager.addToScene(newArea);
+});
+
+initialJson.areas.forEach((area) => {
+  const newArea = new Area(areaFactory.makeArea(area.subLevel, area.p1, area.p2, area.p3, area.p4));
+  sceneManager.addToScene(newArea);
+});
 
 
+console.log(sceneManager);
+
+window.addEventListener("resize", () => (sceneManager.onWindowResize()));

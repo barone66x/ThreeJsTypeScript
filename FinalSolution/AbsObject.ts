@@ -4,14 +4,14 @@ import { Model } from "./Model";
 
 export abstract class AbsObject{
     protected model : Model;
-    protected id : number;
+    //protected id : number;
 
-    public constructor(model : Model, id : number);
-    public constructor(model : Model, id : number, initialPosition : Point3d, initialRotation : number);
-    public constructor(model : Model, id : number, initialPosition? : Point3d, initialRotation? : number){
+    public constructor(model : Model);
+    public constructor(model : Model, initialPosition : Point3d, initialRotation : number);
+    public constructor(model : Model, initialPosition? : Point3d, initialRotation? : number){
         
         this.model = model;
-        this.id = id;
+        
 
         if(initialPosition && initialRotation){
             this.model.moveTo(initialPosition, initialRotation);
@@ -21,9 +21,7 @@ export abstract class AbsObject{
     public getObject() : any{
         return this.model.getObject();
     }
-    public getId() : number{
-        return this.id;
-    }
+    
     public getType() : ModelTypes{
         return this.model.getType();
     }
