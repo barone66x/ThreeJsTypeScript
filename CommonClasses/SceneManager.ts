@@ -1,4 +1,4 @@
-import { AmbientLight, Color, Group, Mesh, Object3D, PerspectiveCamera, Scene, Vector3, WebGLRenderer } from "three";
+import { AmbientLight, Color, Object3D, Scene, Vector3, WebGLRenderer } from "three";
 import { AbsObject } from "../FinalSolution/AbsObject";
 import { CameraManager } from "./CameraManager";
 
@@ -50,7 +50,6 @@ export class SceneManager {
     requestAnimationFrame(() => this.animate());
   }
   private animate(): void {
-    console.log(this.renderer.info.render.calls);
     this.renderer.render(this.scene, this.cameraManager.getCurrentCamera());
     
     requestAnimationFrame(() => this.animate());
