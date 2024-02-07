@@ -1,8 +1,8 @@
 export enum ModelTypes{
-    Pallet,
-    Coil,
-    Rack,
-    ForkLift,
-    Fork,
-    Area
+    PALLET,
+    COIL,
+    RACK,
+    FORKLIFT,
+    FORK,
+    AREA
 }

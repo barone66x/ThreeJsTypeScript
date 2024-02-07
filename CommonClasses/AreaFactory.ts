@@ -48,7 +48,7 @@ export class AreaFactory {
     mesh.castShadow = false;
     mesh.receiveShadow = false;
 
-    const res = new Model(mesh, ModelTypes.Area);
+    const res = new Model(mesh, ModelTypes.AREA);
     return res;
   }
 }

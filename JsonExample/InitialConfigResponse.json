@@ -96,12 +96,13 @@
   "modelsAndTextures": {
     "models": [
       {
-        "type": "bobina",
+        "type": "coil",
         "path": "./models/bobina.glb"
       },
+    
       {
-        "type": "pallet",
-        "path": "./models/pallet.glb"
+        "type": "rack",
+        "path" : "./models/rack.glb"
       }
     ],
     "areaTextures": [
