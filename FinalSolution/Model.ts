@@ -3,14 +3,17 @@ import { ModelTypes } from "../CommonClasses/ModelTypes.ts";
 import { Point3d } from "../CommonClasses/Point.ts";
 import { UDM } from "./UDM.ts";
 import { ModelFactory } from "../CommonClasses/ModelFactory.ts";
+import { AbsObject } from "./AbsObject.ts";
 
 export class Model {
   private object: THREE.Object3D;
   private type: ModelTypes;
+  private attachedObjects : AbsObject[];
 
   public constructor(object: THREE.Object3D, type: ModelTypes) {
     this.object = object;
     this.type = type;
+    this.attachedObjects =  [];
   }
 
   public getType(): ModelTypes {
@@ -59,9 +62,27 @@ export class Model {
     this.object.visible = false;
   }
 
-  public attach(udms: UDM[]): void {}
+  public attach(models: AbsObject[]): void {
+    models.forEach(model => {
+      console.log(model);
+      this.object.attach(model.getObject() as THREE.Object3D);
+      this.attachedObjects.push(model);
+    });
+  }
 
-  public detach(): void {}
+  public detach(): void {
+    let scene = this.object.parent;
+    
+    while(this.attachedObjects.length > 0)
+    {
+        let model = this.attachedObjects.shift() as AbsObject;
+        scene?.add(model.getObject() as THREE.Object3D);
+        
+    }
+      
+    
+    
+  }
 
   public raiseTo(height: number): void {
     this.object.position.z = height;

@@ -17,7 +17,6 @@ sceneManager.startAnimating();
 
 let initialJson = (await (await fetch("JsonExample/InitialConfigResponse.json")).json()) as InitialConfigResponse;
 
-
 initialJson.modelsAndTextures.areaTextures.forEach((area) => {
   AreaFactory.addAreaModel(area.subLevel, area.path);
 });
@@ -44,10 +43,4 @@ initialJson.sceneObjects.forEach((object) => {
   });
 });
 
-const bobina = await ModelFactory.makeObject(ModelTypes.COIL);
-const udm = new UDM(bobina, 100, new Point3d(2, 2, 0), 90);
-sceneManager.addToScene(udm);
-udm.setHightlightOn();
-udm.setHightlightOff();
 
-window.addEventListener("resize", () => sceneManager.onWindowResize());

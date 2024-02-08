@@ -27,4 +27,12 @@ export class UDM extends AbsObject implements IMovable, IHighlightable {
   public setHightlightOff(): void {
     this.model.setHightlightOff();
   }
+
+  // public attachTest(models: AbsObject[]): void {
+  //   this.model.attach(models);
+  // }
+
+  // public detachTest(): void {
+  //   this.model.detach();
+  // }
 }
