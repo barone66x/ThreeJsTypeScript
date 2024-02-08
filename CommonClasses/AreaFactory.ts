@@ -2,20 +2,29 @@ import { ModelTypes } from "./ModelTypes";
 import { Model } from "../FinalSolution/Model";
 import * as THREE from "three";
 import { Point2d } from "./Point";
+import { ModelFactory } from "./ModelFactory";
 
 export class AreaFactory {
+  private static areaFactory: AreaFactory;
   private textureDictionary: {
     [subLevel: number]: Promise<THREE.Material>;
   };
   private loader: THREE.TextureLoader;
 
-  public constructor() {
+  private constructor() {
     this.textureDictionary = {};
-    this.loader = new THREE.TextureLoader()
+    this.loader = new THREE.TextureLoader();
   }
 
-  private async loadFile(path: string): Promise<THREE.Material> {
-    let texture = await this.loader.loadAsync(path);
+  private static getInstance(): AreaFactory {
+    if (!AreaFactory.areaFactory) {
+      AreaFactory.areaFactory = new AreaFactory();
+    }
+    return AreaFactory.areaFactory;
+  }
+
+  private static async loadFile(path: string): Promise<THREE.Material> {
+    let texture = await AreaFactory.getInstance().loader.loadAsync(path);
 
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
@@ -28,11 +37,11 @@ export class AreaFactory {
     return res;
   }
 
-  public addAreaModel(subLevel: number, path: string): void {
-    this.textureDictionary[subLevel] = this.loadFile(path);
+  public static addAreaModel(subLevel: number, path: string): void {
+    AreaFactory.getInstance().textureDictionary[subLevel] = AreaFactory.loadFile(path);
   }
 
-  public async makeArea(subLevel: number, p1: Point2d, p2: Point2d, p3: Point2d, p4: Point2d): Promise<Model> {
+  public static async makeArea(subLevel: number, p1: Point2d, p2: Point2d, p3: Point2d, p4: Point2d): Promise<Model> {
     //andiamo a creare un modello 3d che ha come material la texture che abbiamo applicato
     //usiamo i 4 punti per geneare i vertici del modello 3d
 
@@ -45,9 +54,9 @@ export class AreaFactory {
 
     const geometry = new THREE.ShapeGeometry(shape);
 
-    const mesh = new THREE.Mesh(geometry, await this.textureDictionary[subLevel]);
+    const mesh = new THREE.Mesh(geometry, await AreaFactory.getInstance().textureDictionary[subLevel]);
     mesh.position.z += 0.01 * subLevel;
-    
+
     mesh.matrixAutoUpdate = false;
     mesh.castShadow = false;
     mesh.receiveShadow = false;
