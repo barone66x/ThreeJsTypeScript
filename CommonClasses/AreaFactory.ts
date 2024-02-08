@@ -2,33 +2,37 @@ import { ModelTypes } from "./ModelTypes";
 import { Model } from "../FinalSolution/Model";
 import * as THREE from "three";
 import { Point2d } from "./Point";
-import { BufferGeometryUtils } from "three/examples/jsm/Addons.js";
 
 export class AreaFactory {
   private textureDictionary: {
-    [subLevel: number]: THREE.Material;
+    [subLevel: number]: Promise<THREE.Material>;
   };
+  private loader: THREE.TextureLoader;
 
   public constructor() {
     this.textureDictionary = {};
+    this.loader = new THREE.TextureLoader()
   }
 
-  private loadFile(path: string): THREE.Material {
-    let texture = new THREE.TextureLoader().load(path);
+  private async loadFile(path: string): Promise<THREE.Material> {
+    let texture = await this.loader.loadAsync(path);
 
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.RepeatWrapping;
     // trovare scala
     texture.repeat.set(0.2, 0.2);
 
-    return new THREE.MeshBasicMaterial({ map: texture });
+    const res = new THREE.MeshBasicMaterial({ map: texture });
+    res.depthWrite = false;
+
+    return res;
   }
 
   public addAreaModel(subLevel: number, path: string): void {
     this.textureDictionary[subLevel] = this.loadFile(path);
   }
 
-  public makeArea(subLevel: number, p1: Point2d, p2: Point2d, p3: Point2d, p4: Point2d): Model {
+  public async makeArea(subLevel: number, p1: Point2d, p2: Point2d, p3: Point2d, p4: Point2d): Promise<Model> {
     //andiamo a creare un modello 3d che ha come material la texture che abbiamo applicato
     //usiamo i 4 punti per geneare i vertici del modello 3d
 
@@ -41,9 +45,9 @@ export class AreaFactory {
 
     const geometry = new THREE.ShapeGeometry(shape);
 
-    const mesh = new THREE.Mesh(geometry, this.textureDictionary[subLevel]);
-    mesh.name = subLevel.toString();
+    const mesh = new THREE.Mesh(geometry, await this.textureDictionary[subLevel]);
     mesh.position.z += 0.01 * subLevel;
+    
     mesh.matrixAutoUpdate = false;
     mesh.castShadow = false;
     mesh.receiveShadow = false;

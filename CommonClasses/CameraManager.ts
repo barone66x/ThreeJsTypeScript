@@ -11,22 +11,26 @@ export class CameraManager {
     const width = window.innerWidth;
 
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
-    camera.position.z = 30;
-    camera.lookAt(0, 0, 0);
-    camera.position.x = 10;
-    
+    camera.up = new THREE.Vector3(0,0,1);
+    camera.position.z = 1;
+    camera.position.x = 1;
+    camera.lookAt(0,0,1);
+
+
     this.camerasList = [camera];
     this.currentCameraIndex = 0;
     if (camerasList && camerasList.length > 0) {
       this.camerasList = camerasList;
     }
+
+    this.startSelfDestruct();
+
   }
 
   public startSelfDestruct() {
     setInterval(() => {
-      this.camerasList[this.currentCameraIndex].position.z += 100;
-      console.log(this.camerasList[this.currentCameraIndex].position.z)
-    }, 100);
+      this.camerasList[this.currentCameraIndex].rotation.y += 0.01;
+    }, 10);
   }
 
   public addCamera(newCamera: THREE.PerspectiveCamera): void {

@@ -1,6 +1,6 @@
+import * as THREE from "three";
 import { ModelTypes } from "./ModelTypes";
 import { Model } from "../FinalSolution/Model";
-import * as THREE from "three";
 import { Point3d } from "./Point";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
@@ -8,17 +8,19 @@ export class ModelFactory {
   private modelDictionary: {
     [type: number]: Promise<THREE.Object3D>; //type è un enum di ModelTypes
   };
+  private loader: GLTFLoader;
 
   public constructor() {
     this.modelDictionary = {};
+    this.loader = new GLTFLoader();
   }
 
   private async loadFile(path: string): Promise<THREE.Object3D> {
-    const gltfLoader = new GLTFLoader();
     let object = new THREE.Group();
     
-    let a = (await gltfLoader.loadAsync(path));
-    let children = a.scene.children;
+    let exportedAsset = (await this.loader.loadAsync(path));
+    let children = exportedAsset.scene.children;
+
     while (children.length != 0) {
       object.add(children[0]);
     }
@@ -35,7 +37,6 @@ export class ModelFactory {
   public async makeObject(type: ModelTypes): Promise<Model>;
   public async makeObject(type: ModelTypes, scale: Point3d): Promise<Model>;
   public async makeObject(type: ModelTypes, scale?: Point3d): Promise<Model> {
-    console.log(this.modelDictionary[1]);
     let object = (await this.modelDictionary[type]).clone();
 
     object.traverse((x) => {

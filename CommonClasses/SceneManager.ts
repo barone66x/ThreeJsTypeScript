@@ -10,7 +10,7 @@ export class SceneManager {
   public constructor(pixelRatio : number = 2) {
     this.cameraManager = new CameraManager();
 
-    this.renderer = new WebGLRenderer({ logarithmicDepthBuffer: true ,powerPreference: "high-performance"});
+    this.renderer = new WebGLRenderer({ powerPreference: "high-performance"});
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(pixelRatio);
 
@@ -53,9 +53,5 @@ export class SceneManager {
     this.renderer.render(this.scene, this.cameraManager.getCurrentCamera());
     
     requestAnimationFrame(() => this.animate());
-  }
-
-  public write(){
-    console.log(this.scene.children);
   }
 }

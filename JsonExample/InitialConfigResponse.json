@@ -99,7 +99,6 @@
         "type": "coil",
         "path": "./models/bobina.glb"
       },
-    
       {
         "type": "rack",
         "path" : "./models/rack.glb"
@@ -112,11 +111,11 @@
       },
       {
         "subLevel": 1,
-        "path": "./textures/subArea0.png"
+        "path": "./textures/subArea1.png"
       },
       {
         "subLevel": 2,
-        "path": "./textures/subArea1.jpg"
+        "path": "./textures/subArea2.jpg"
       }
     ]
   }

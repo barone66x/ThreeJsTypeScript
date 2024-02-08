@@ -26,19 +26,21 @@ initialJson.modelsAndTextures.models.forEach((model) => {
 });
 
 initialJson.floors.forEach((floor) => {
-  const newArea = new Area(areaFactory.makeArea(0, floor.p1, floor.p2, floor.p3, floor.p4));
-  sceneManager.addToScene(newArea);
+  areaFactory.makeArea(0, floor.p1, floor.p2, floor.p3, floor.p4).then(newFloor => {
+    sceneManager.addToScene(new Area(newFloor));
+  });
 });
 
 initialJson.areas.forEach((area) => {
-  const newArea = new Area(areaFactory.makeArea(area.subLevel, area.p1, area.p2, area.p3, area.p4));
-  sceneManager.addToScene(newArea);
+  areaFactory.makeArea(area.subLevel, area.p1, area.p2, area.p3, area.p4).then(newArea => {
+    sceneManager.addToScene(new Area(newArea));
+  });
 });
 
-initialJson.sceneObjects.forEach(async (object)=> {
-  const newObject = new SceneObject(await modelFactory.makeObject(ModelTypes[object.type.toUpperCase() as keyof typeof ModelTypes]),object.position,object.rotation)
-  sceneManager.addToScene(newObject);
+initialJson.sceneObjects.forEach((object)=> {
+  modelFactory.makeObject(ModelTypes[object.type.toUpperCase() as keyof typeof ModelTypes]).then(model => {
+    sceneManager.addToScene(new SceneObject(model, object.position, object.rotation));
+  })
 })
-sceneManager.write();
 
 window.addEventListener("resize", () => sceneManager.onWindowResize());

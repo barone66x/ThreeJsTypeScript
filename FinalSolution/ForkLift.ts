@@ -8,8 +8,8 @@ import { UDM } from "./UDM";
 export class ForkLift extends AbsObject implements IMovable {
   private fork: Fork;
 
-  public constructor(model: Model, id: number, initialPosition: Point3d, initialRotation: number, fork: Fork) {
-    super(model, id, initialPosition, initialRotation);
+  public constructor(model: Model, initialPosition: Point3d, initialRotation: number, fork: Fork) {
+    super(model, initialPosition, initialRotation);
     this.fork = fork;
   }
 
