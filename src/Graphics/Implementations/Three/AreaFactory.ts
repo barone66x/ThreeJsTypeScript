@@ -1,11 +1,12 @@
-import { ModelTypes } from "./ModelTypes";
-import { Model } from "../FinalSolution/Model";
+import { ModelTypes } from "../../Utils/ModelTypes";
+import { Model } from "./Model";
 import * as THREE from "three";
-import { Point2d } from "./Point";
-import { ModelFactory } from "./ModelFactory";
+import { Point2d } from "../../Utils/Point";
 
 export class AreaFactory {
+  
   private static areaFactory: AreaFactory;
+  
   private textureDictionary: {
     [subLevel: number]: Promise<THREE.Material>;
   };

@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { ModelTypes } from "./ModelTypes";
-import { Model } from "../FinalSolution/Model";
-import { Point3d } from "./Point";
+import { ModelTypes } from "../../Utils/ModelTypes";
+import { Model } from "./Model";
+import { Point3d } from "../../Utils/Point";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 export class ModelFactory {

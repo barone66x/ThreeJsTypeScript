@@ -1,3 +1,6 @@
+export interface InitialConfigRequest {
+
+}
 export interface InitialConfigResponse {
   floors: {
     p1: { x: number; y: number };
@@ -29,7 +32,18 @@ export interface InitialConfigResponse {
     }[];
   };
 }
-
 export interface ServerPollingResponse {
+    
+}
+export interface ServerPollingRequest {
+    
+}
+
+//-------------------------------------------------------------------------------------
+
+export interface RTLSPollingRequest {
+    
+}
+export interface RTLSPollingResponse {
     
 }

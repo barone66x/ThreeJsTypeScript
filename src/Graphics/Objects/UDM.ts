@@ -1,8 +1,8 @@
-import { Point3d } from "../CommonClasses/Point";
-import { IHighlightable } from "./IHighlightable";
-import { IMovable } from "./IMovable";
+import { Point3d } from "../Utils/Point";
+import { IHighlightable } from "./Interfaces/IHighlightable";
+import { IMovable } from "./Interfaces/IMovable";
 import { AbsObject } from "./AbsObject";
-import { Model } from "./Model";
+import { Model } from "../Implementations/Three/Model";
 
 export class UDM extends AbsObject implements IMovable, IHighlightable {
   private id: number;
@@ -27,12 +27,4 @@ export class UDM extends AbsObject implements IMovable, IHighlightable {
   public setHightlightOff(): void {
     this.model.setHightlightOff();
   }
-
-  // public attachTest(models: AbsObject[]): void {
-  //   this.model.attach(models);
-  // }
-
-  // public detachTest(): void {
-  //   this.model.detach();
-  // }
 }

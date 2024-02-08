@@ -1,17 +1,20 @@
 import "./style.css";
-import { SceneManager } from "../CommonClasses/SceneManager";
-import { InitialConfigResponse } from "../CommonClasses/JsonResponses";
 
-import { AreaFactory } from "../CommonClasses/AreaFactory";
-import { ModelFactory } from "../CommonClasses/ModelFactory";
-import { Area } from "../FinalSolution/Area";
-import { SceneObject } from "../FinalSolution/SceneObject";
-import { ModelTypes } from "../CommonClasses/ModelTypes";
-import { Model } from "../FinalSolution/Model";
-import { UDM } from "../FinalSolution/UDM";
-import { Point3d } from "../CommonClasses/Point";
+import { SceneManager } from "./Graphics/Implementations/Three/SceneManager";
+import { AreaFactory } from "./Graphics/Implementations/Three/AreaFactory";
+import { ModelFactory } from "./Graphics/Implementations/Three/ModelFactory";
+
+import { InitialConfigResponse } from "./Graphics/Utils/JsonResponses";
+import { ModelTypes } from "./Graphics/Utils/ModelTypes";
+
+import { Area } from "./Graphics/Objects/Area";
+import { SceneObject } from "./Graphics/Objects/SceneObject";
+
+import { UDM } from "./Graphics/Objects/UDM"
+import { Point3d } from "./Graphics/Utils/Point";
 
 const sceneManager = new SceneManager(1.5);
+
 document.body.appendChild(sceneManager.getHTMLCanvas());
 sceneManager.startAnimating();
 
@@ -44,3 +47,7 @@ initialJson.sceneObjects.forEach((object) => {
 });
 
 
+ModelFactory.makeObject(ModelTypes.COIL).then(model => {
+  const bobina = new UDM(model, 1, new Point3d(-1,0,0), 0);
+  sceneManager.addToScene(bobina);
+});

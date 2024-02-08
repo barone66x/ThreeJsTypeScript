@@ -1,6 +1,6 @@
-import { ModelTypes } from "../CommonClasses/ModelTypes";
-import { Point3d } from "../CommonClasses/Point";
-import { Model } from "./Model";
+import { ModelTypes } from "../Utils/ModelTypes";
+import { Point3d } from "../Utils/Point";
+import { Model } from "../Implementations/Three/Model";
 
 export abstract class AbsObject{
     protected model : Model;
@@ -11,9 +11,8 @@ export abstract class AbsObject{
     public constructor(model : Model, initialPosition? : Point3d, initialRotation? : number){
         
         this.model = model;
-        
 
-        if(initialPosition && initialRotation){
+        if((initialRotation != undefined) && (initialPosition != undefined)){
             this.model.moveTo(initialPosition, initialRotation);
         }        
     }

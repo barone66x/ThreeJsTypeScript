@@ -1,6 +1,6 @@
-import { IComposable } from "./IComposable";
-import { IRaisable } from "./IRaisable";
-import { Model } from "./Model";
+import { IComposable } from "./Interfaces/IComposable";
+import { IRaisable } from "./Interfaces/IRaisable";
+import { Model } from "../Implementations/Three/Model";
 import { AbsObject } from "./AbsObject";
 import { UDM } from "./UDM";
 

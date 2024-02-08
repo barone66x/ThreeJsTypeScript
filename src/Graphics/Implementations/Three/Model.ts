@@ -1,9 +1,8 @@
 import * as THREE from "three";
-import { ModelTypes } from "../CommonClasses/ModelTypes.ts";
-import { Point3d } from "../CommonClasses/Point.ts";
-import { UDM } from "./UDM.ts";
-import { ModelFactory } from "../CommonClasses/ModelFactory.ts";
-import { AbsObject } from "./AbsObject.ts";
+import { ModelTypes } from "../../Utils/ModelTypes";
+import { Point3d } from "../../Utils/Point";
+import { ModelFactory } from "./ModelFactory";
+import { AbsObject } from "../../Objects/AbsObject";
 
 export class Model {
   private object: THREE.Object3D;
@@ -30,6 +29,7 @@ export class Model {
   public setPosition(position: Point3d): void {
     this.object.position.set(position.x, position.y, position.z);
   }
+
   public setRotation(rotation: number): void {
     this.object.rotation.z = this.realAngleToGraphicAngle(rotation);
   }
@@ -41,8 +41,8 @@ export class Model {
       }
     });
   }
-  public setHightlightOff(): void {
 
+  public setHightlightOff(): void {
     ModelFactory.getMaterialsByType(this.type).then((materials) => {
       let i = 0;
       this.object.traverse((child) => {
@@ -64,8 +64,7 @@ export class Model {
 
   public attach(models: AbsObject[]): void {
     models.forEach(model => {
-      console.log(model);
-      this.object.attach(model.getObject() as THREE.Object3D);
+      this.object.attach(model.getObject());
       this.attachedObjects.push(model);
     });
   }
@@ -73,15 +72,10 @@ export class Model {
   public detach(): void {
     let scene = this.object.parent;
     
-    while(this.attachedObjects.length > 0)
-    {
-        let model = this.attachedObjects.shift() as AbsObject;
-        scene?.add(model.getObject() as THREE.Object3D);
-        
+    while(this.attachedObjects.length > 0) {
+      let model = this.attachedObjects.shift();
+      scene?.add(model?.getObject());
     }
-      
-    
-    
   }
 
   public raiseTo(height: number): void {

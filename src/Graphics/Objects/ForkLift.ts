@@ -1,7 +1,7 @@
-import { Point3d } from "../CommonClasses/Point";
+import { Point3d } from "../Utils/Point";
 import { Fork } from "./Fork";
-import { IMovable } from "./IMovable";
-import { Model } from "./Model";
+import { IMovable } from "./Interfaces/IMovable";
+import { Model } from "../Implementations/Three/Model";
 import { AbsObject } from "./AbsObject";
 import { UDM } from "./UDM";
 

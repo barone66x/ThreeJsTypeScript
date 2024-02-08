@@ -1,5 +1,5 @@
-import { Point3d } from "../CommonClasses/Point";
-import { Model } from "./Model";
+import { Point3d } from "../Utils/Point";
+import { Model } from "../Implementations/Three/Model";
 import { AbsObject } from "./AbsObject";
 
 export class SceneObject extends AbsObject {
