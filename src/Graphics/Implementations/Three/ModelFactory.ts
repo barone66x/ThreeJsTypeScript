@@ -3,6 +3,8 @@ import { ModelTypes } from "../../Utils/ModelTypes";
 import { Model } from "./Model";
 import { Point3d } from "../../Utils/Point";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { Fork } from "../../Objects/Fork";
+import { ForkLift } from "../../Objects/ForkLift";
 
 export class ModelFactory {
   public static modelFactory: ModelFactory;
@@ -70,9 +72,21 @@ export class ModelFactory {
     }
     return new Model(object, type);
   }
+  
+  public static async makeForkLift(): Promise<ForkLift> {
+    const forkLiftObject = await ModelFactory.makeObject(ModelTypes.FORKLIFT);
 
-  //da vedere
-  public static makeFork() {
-    //metodo che restituisce un oggetto ForkModel che deriva da Model
+    const forkliftModel = forkLiftObject.getObject() as THREE.Object3D;
+    
+    let forklift!: ForkLift;
+
+    forkliftModel.traverse(child => {
+      if ((child as THREE.Mesh).name.toUpperCase() == "FORK"){
+        const fork = new Fork(new Model(child, ModelTypes.FORK),0);
+        forklift = new ForkLift(forkLiftObject, new Point3d(0, 0, 0), 0, fork);
+      };
+    });
+
+    return forklift;
   }
 }

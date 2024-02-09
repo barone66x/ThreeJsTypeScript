@@ -1,3 +1,5 @@
+import { Point3d } from "./Point";
+
 export interface InitialConfigRequest {
 
 }
@@ -33,8 +35,43 @@ export interface InitialConfigResponse {
   };
 }
 export interface ServerPollingResponse {
-    
+    nearestUdms : NearestUdms[];
+    collidedAreas : CollidedAreas[];
+    highlightedUdms : HighLightedUdms[];
+    loadedUdms : LoadedUdms[];
+
 }
+
+export interface NearestUdms{
+  id : number;
+  type : string;
+  position : Point3d;
+  size : Point3d;
+  rotation : number
+}
+
+export interface CollidedAreas{
+  id : number;
+  name : string;
+  description : string;
+}
+
+export interface HighLightedUdms{
+  id : number;
+  code : string;
+  description : string;
+  type : string;
+  size : Point3d;
+}
+
+export interface LoadedUdms{
+  id : number;
+  code : string;
+  description : string;
+  type : string;
+  size : Point3d;
+}
+
 export interface ServerPollingRequest {
     
 }

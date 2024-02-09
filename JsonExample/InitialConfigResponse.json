@@ -97,11 +97,15 @@
     "models": [
       {
         "type": "coil",
-        "path": "./models/bobina.glb"
+        "path": "./models/coil_resting.glb"
       },
       {
         "type": "rack",
         "path" : "./models/rack.glb"
+      },
+      {
+        "type": "Forklift",
+        "path" : "./models/forklift.glb"
       }
     ],
     "areaTextures": [

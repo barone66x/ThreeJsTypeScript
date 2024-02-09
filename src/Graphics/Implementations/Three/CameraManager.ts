@@ -12,9 +12,10 @@ export class CameraManager {
 
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 100);
     camera.up = new THREE.Vector3(0,0,1);
-    camera.position.z = 1;
-    camera.position.x = 1;
-    camera.lookAt(0,0,1);
+    camera.position.z = 4;
+    camera.position.y = 10;
+    // camera.position.x = -10;
+    camera.lookAt(0,0,4);
 
 
     this.camerasList = [camera];
@@ -22,14 +23,11 @@ export class CameraManager {
     if (camerasList && camerasList.length > 0) {
       this.camerasList = camerasList;
     }
-
-    this.startSelfDestruct();
-
   }
 
   public startSelfDestruct() {
     setInterval(() => {
-      this.camerasList[this.currentCameraIndex].rotation.y += 0.01;
+      // this.camerasList[this.currentCameraIndex].rotation.y += 0.01;
     }, 10);
   }
 
