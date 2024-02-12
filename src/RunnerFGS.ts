@@ -9,68 +9,85 @@ import { InitialConfigRequest, InitialConfigResponse } from "./Graphics/Utils/Js
 import { ModelTypes } from "./Graphics/Utils/ModelTypes";
 import { Point3d } from "./Graphics/Utils/Point";
 
-export class RunnerFGS{
+export class RunnerFGS {
+  private rtlsCommunicator: IRTLSCommunicator;
+  private serverCommunicator: IServerCommunicator;
 
-    private rtlsCommunicator: IRTLSCommunicator;
-    private serverCommunicator: IServerCommunicator;
+  private sceneManager: SceneManager;
 
-    private sceneManager: SceneManager;
+  private successfulConfiguration: boolean;
+  private oneSecondTimer: number;
 
-    constructor(rtlsCommunicator: IRTLSCommunicator, serverCommunicator: IServerCommunicator, sceneManager: SceneManager) {
-        this.rtlsCommunicator = rtlsCommunicator;
-        this.serverCommunicator = serverCommunicator;
+  constructor(rtlsCommunicator: IRTLSCommunicator, serverCommunicator: IServerCommunicator, sceneManager: SceneManager) {
+    this.rtlsCommunicator = rtlsCommunicator;
+    this.serverCommunicator = serverCommunicator;
+    this.successfulConfiguration = false;
+    this.sceneManager = sceneManager;
 
-        this.sceneManager = sceneManager;
-        
-        this.init();
-    }
+    this.oneSecondTimer = 9;
+    setInterval(() => this.timerHandler(), 500);
+  }
 
-    public init(): void {
-        const serverReq : InitialConfigRequest = {}; 
-        
-        this.serverCommunicator.initRequest(serverReq).then( (initialJson: InitialConfigResponse) => {
-            
-            // Load Textures
-            initialJson.modelsAndTextures.areaTextures.forEach((area) => {
-                AreaFactory.addAreaModel(area.subLevel, area.path);
-            });
-            
-            // Load Models
-            initialJson.modelsAndTextures.models.forEach((model) => {
-                ModelFactory.addObject(ModelTypes[model.type.toUpperCase() as keyof typeof ModelTypes], model.path);
-                this.sceneManager.init();
-            });
-            
-            // Load Floors
-            initialJson.floors.forEach((floor) => {
-                AreaFactory.makeArea(0, floor.p1, floor.p2, floor.p3, floor.p4).then((newFloor) => {
-                    this.sceneManager.addToScene(new Area(newFloor));
-                });
-            });
-            
-            // Load Areas
-            initialJson.areas.forEach((area) => {
-                AreaFactory.makeArea(area.subLevel, area.p1, area.p2, area.p3, area.p4).then((newArea) => {
-                    this.sceneManager.addToScene(new Area(newArea));
-                });
-            });
-            
-            // Load Scene Objects
-            initialJson.sceneObjects.forEach((object) => {
-                ModelFactory.makeObject(ModelTypes[object.type.toUpperCase() as keyof typeof ModelTypes]).then((model) => {
-                    this.sceneManager.addToScene(new SceneObject(model, object.position, object.rotation));
-                });
-            });
-            
-            ModelFactory.makeObject(ModelTypes.COIL).then(model => {
-                const bobina = new UDM(model, 1, new Point3d(-1,0,0), 0);
-                this.sceneManager.addToScene(bobina);
-            });            
+  public init(): void {
+    const serverReq: InitialConfigRequest = {};
+
+    this.serverCommunicator
+      .initRequest(serverReq)
+      .then((initialJson: InitialConfigResponse) => {
+        console.log(<InitialConfigResponse>initialJson);
+
+        // Load Textures
+        initialJson.modelsAndTextures.areaTextures.forEach((area) => {
+          AreaFactory.addAreaModel(area.subLevel, area.path);
         });
+
+        // Load Models
+        initialJson.modelsAndTextures.models.forEach((model) => {
+          ModelFactory.addObject(ModelTypes[model.type.toUpperCase() as keyof typeof ModelTypes], model.path);
+        });
+
+        //inizializzazione scena
+        this.sceneManager.init();
+
+        // Load Floors
+        initialJson.floors.forEach((floor) => {
+          AreaFactory.makeArea(0, floor.p1, floor.p2, floor.p3, floor.p4).then((newFloor) => {
+            this.sceneManager.addToScene(new Area(newFloor));
+          });
+        });
+
+        // Load Areas
+        initialJson.areas.forEach((area) => {
+          AreaFactory.makeArea(area.subLevel, area.p1, area.p2, area.p3, area.p4).then((newArea) => {
+            this.sceneManager.addToScene(new Area(newArea));
+          });
+        });
+
+        // Load Scene Objects
+        initialJson.sceneObjects.forEach((object) => {
+          ModelFactory.makeObject(ModelTypes[object.type.toUpperCase() as keyof typeof ModelTypes]).then((model) => {
+            this.sceneManager.addToScene(new SceneObject(model, object.position, object.rotation));
+          });
+        });
+
+        ModelFactory.makeObject(ModelTypes.COIL).then((model) => {
+          const bobina = new UDM(model, 1, new Point3d(-1, 0, 0), 0);
+          this.sceneManager.addToScene(bobina);
+          this.successfulConfiguration = true;
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+        this.successfulConfiguration = false;
+      });
+  }
+
+  private timerHandler() {
+    this.oneSecondTimer = (this.oneSecondTimer + 1) % 10;
+    if (this.oneSecondTimer == 0 && !this.successfulConfiguration) {
+      this.init();
     }
+  }
 
-    private serverPolling() {
-
-    }
-
+  private serverPolling() {}
 }

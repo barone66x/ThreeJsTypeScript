@@ -22,7 +22,7 @@ export class SceneManager{
       this.addToScene(forklift);
     });
 
-    document.addEventListener("resize", () => {this.onWindowResize()})
+    window.addEventListener("resize", () => {this.onWindowResize()})
     let getCamera = (this.cameraManager.getCurrentCamera).bind(this.cameraManager);
 
     this.scene.init(getCamera);
