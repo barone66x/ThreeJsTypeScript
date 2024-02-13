@@ -9,6 +9,7 @@ import { InitialConfigRequest, InitialConfigResponse } from "./Graphics/Utils/Js
 import { ModelTypes } from "./Graphics/Utils/ModelTypes";
 import { Point3d } from "./Graphics/Utils/Point";
 
+
 export class RunnerFGS {
   private rtlsCommunicator: IRTLSCommunicator;
   private serverCommunicator: IServerCommunicator;
