@@ -36,7 +36,8 @@
       "id": 1,
       "name": "lorem ipsum",
       "description": "lorem ipsum"
-    },{
+    },
+    {
       "id": 2,
       "name": "lorem ipsum",
       "description": "lorem ipsum"
@@ -55,17 +56,17 @@
       }
     }
   ],
-  "loadedUdms":[
+  "loadedUdms": [
     {
-        "id": 5,
-        "code": "1111aaaaaa",
-        "description": "lorem ipsum",
-        "type": "coil",
-        "size": {
-          "x": 1,
-          "z": 2,
-          "y": 1
-        } 
+      "id": 5,
+      "code": "1111aaaaaa",
+      "description": "lorem ipsum",
+      "type": "coil",
+      "size": {
+        "x": 1,
+        "z": 2,
+        "y": 1
+      }
     }
   ]
 }

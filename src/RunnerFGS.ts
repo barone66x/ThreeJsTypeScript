@@ -73,10 +73,12 @@ export class RunnerFGS {
         this.sceneManager.addToScene(bobina);
         this.successfulConfiguration = true;
       });
+
     }).catch((error) => {
       console.log(error);
       this.successfulConfiguration = false;
     });
+
   }
 
   private timerHandler() {
@@ -120,6 +122,8 @@ export class RunnerFGS {
   private handleLoadedUdms(loadedUdms : LoadedUdm[]) {
 
   }
+
+  
 
 
   private serverPolling() {}

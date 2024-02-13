@@ -7,12 +7,12 @@ import { AbsObject } from "../../Objects/AbsObject";
 export class Model {
   private object: THREE.Object3D;
   private type: ModelTypes;
-  private attachedObjects : AbsObject[];
+  private attachedObjects: AbsObject[];
 
   public constructor(object: THREE.Object3D, type: ModelTypes) {
     this.object = object;
     this.type = type;
-    this.attachedObjects =  [];
+    this.attachedObjects = [];
   }
 
   public getType(): ModelTypes {
@@ -43,14 +43,10 @@ export class Model {
   }
 
   public setHightlightOff(): void {
-    ModelFactory.getMaterialsByType(this.type).then((materials) => {
-      let i = 0;
-      this.object.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-          child.material = materials[i];
-          i++;
-        }
-      });
+    this.object.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        child.material.color.setHex(0xffffff); //rimette il colore di default al material
+      }
     });
   }
 
@@ -63,7 +59,7 @@ export class Model {
   }
 
   public attach(models: AbsObject[]): void {
-    models.forEach(model => {
+    models.forEach((model) => {
       this.object.attach(model.getObject());
       this.attachedObjects.push(model);
     });
@@ -71,8 +67,8 @@ export class Model {
 
   public detach(): void {
     let scene = this.object.parent;
-    
-    while(this.attachedObjects.length > 0) {
+
+    while (this.attachedObjects.length > 0) {
       let model = this.attachedObjects.shift();
       scene?.add(model?.getObject());
     }

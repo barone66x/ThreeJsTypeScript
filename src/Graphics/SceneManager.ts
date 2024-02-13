@@ -4,7 +4,7 @@ import { ModelFactory } from "./Implementations/Three/ModelFactory";
 import { Scene } from "./Implementations/Three/Scene";
 import { AbsObject } from "./Objects/AbsObject";
 import { UdmManager } from "./Utils/UdmManager";
-import { CollidedArea, HighLightedUdm, NearestUdm } from "./Utils/JsonResponses";
+import { CollidedArea, HighLightedUdm, LoadedUdm, NearestUdm } from "./Utils/JsonResponses";
 
 export class SceneManager{
  
@@ -42,7 +42,6 @@ export class SceneManager{
       lineCarrier = "\n\n";
     });
 
-    // console.log(collidedAreasInfo);
   }
 
   public handleNearestUdms(nearestUdms: NearestUdm[]) : void {    
@@ -65,8 +64,15 @@ export class SceneManager{
       lineCarrier = "\n\n";
     });
 
-    // console.log(highlightedUdmsInfo);
+  }
+
+  public handleLoadedUdms(loadedUdms : LoadedUdm[]) : void{
     
+    const udmToLoad = this.udmManager.readLoaded(loadedUdms);
+    this.forklift.then(forklift =>{
+      forklift.unloadFork();
+      forklift.loadFork(udmToLoad);
+    });
   }
 
   public addToScene(object: AbsObject): void {
