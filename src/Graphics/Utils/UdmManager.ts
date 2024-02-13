@@ -1,6 +1,6 @@
 import { ModelFactory } from "../Implementations/Three/ModelFactory";
 import { UDM } from "../Objects/UDM";
-import { HighLightedUdms, LoadedUdms, NearestUdms, ServerPollingResponse } from "./JsonResponses";
+import { HighLightedUdm, LoadedUdm, NearestUdm, ServerPollingResponse } from "./JsonResponses";
 import { ModelTypes } from "./ModelTypes";
 
 export class UdmManager{
@@ -14,16 +14,21 @@ export class UdmManager{
         this.udms = {}
     }
 
-    public readNearest(response : NearestUdms[]) : void{
-        response.forEach(jsonUdm => {
+    public async readNearest(response : NearestUdm[]) : Promise<UDM[]>{
+        const res : UDM[] = [];
+
+        for await (const jsonUdm of response) {            
             if (this.udms[jsonUdm.id]){
                 this.udms[jsonUdm.id].moveTo(jsonUdm.position,jsonUdm.rotation);
                 this.udms[jsonUdm.id].setHightlightOff();
             }
             else{
-                this.addUmd(jsonUdm);
+                await this.addUmd(jsonUdm);
+                res.push(this.udms[jsonUdm.id]);
             }
-        })
+        }
+        
+        return res;
     }
 
     //PENSARE
@@ -31,7 +36,7 @@ export class UdmManager{
     //OPPURE
     //CI FACCIAMO DARE LA POSIZIONE DI ENTRAMBE LE LISTE E NON ABBIAMO BOBINE DUPLICATE?
 
-    public readHighlighted(response : HighLightedUdms[]) : void{ 
+    public readHighlighted(response : HighLightedUdm[]) : void{ 
         response.forEach(jsonUdm => {
             if (this.udms[jsonUdm.id]){
                 this.udms[jsonUdm.id].setHightlightOn();
@@ -40,14 +45,14 @@ export class UdmManager{
         })
     }
 
-    public readLoaded(response : LoadedUdms[]) : void{
+    public readLoaded(response : LoadedUdm[]) : void{
 
     }
 
-    public addUmd(jsonUdm : NearestUdms){
-        ModelFactory.makeObject(ModelTypes[jsonUdm.type.toUpperCase() as keyof typeof ModelTypes], jsonUdm.size).then(model => {
-            const udm = new UDM(model,jsonUdm.id,jsonUdm.position,jsonUdm.rotation);
-            this.udms[jsonUdm.id] = udm;
-        })
+    public async addUmd(jsonUdm : NearestUdm) : Promise<void>{
+        const model = await ModelFactory.makeObject(ModelTypes[jsonUdm.type.toUpperCase() as keyof typeof ModelTypes], jsonUdm.size)
+
+        const udm = new UDM(model,jsonUdm.id,jsonUdm.position,jsonUdm.rotation);
+        this.udms[jsonUdm.id] = udm;
     }
 }

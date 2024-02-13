@@ -1,24 +1,24 @@
-import { Point3d } from "./Point";
+import { Point2d, Point3d } from "./Point";
 
 export interface InitialConfigRequest {}
 export interface InitialConfigResponse {
   floors: {
-    p1: { x: number; y: number };
-    p2: { x: number; y: number };
-    p3: { x: number; y: number };
-    p4: { x: number; y: number };
+    p1: Point2d;
+    p2: Point2d;
+    p3: Point2d;
+    p4: Point2d;
   }[];
   areas: {
     id: number;
     subLevel: number;
-    p1: { x: number; y: number };
-    p2: { x: number; y: number };
-    p3: { x: number; y: number };
-    p4: { x: number; y: number };
+    p1: Point2d;
+    p2: Point2d;
+    p3: Point2d;
+    p4: Point2d;
   }[];
   sceneObjects: {
     type: string;
-    position: { x: number; y: number; z: number };
+    position: Point3d;
     rotation: number;
   }[];
   modelsAndTextures: {
@@ -33,13 +33,13 @@ export interface InitialConfigResponse {
   };
 }
 export interface ServerPollingResponse {
-  nearestUdms: NearestUdms[];
-  collidedAreas: CollidedAreas[];
-  highlightedUdms: HighLightedUdms[];
-  loadedUdms: LoadedUdms[];
+  nearestUdms: NearestUdm[];
+  collidedAreas: CollidedArea[];
+  highlightedUdms: HighLightedUdm[];
+  loadedUdms: LoadedUdm[];
 }
 
-export interface NearestUdms {
+export interface NearestUdm {
   id: number;
   type: string;
   position: Point3d;
@@ -47,13 +47,13 @@ export interface NearestUdms {
   rotation: number;
 }
 
-export interface CollidedAreas {
+export interface CollidedArea {
   id: number;
   name: string;
   description: string;
 }
 
-export interface HighLightedUdms {
+export interface HighLightedUdm {
   id: number;
   code: string;
   description: string;
@@ -61,7 +61,7 @@ export interface HighLightedUdms {
   size: Point3d;
 }
 
-export interface LoadedUdms {
+export interface LoadedUdm {
   id: number;
   code: string;
   description: string;
@@ -69,7 +69,13 @@ export interface LoadedUdms {
   size: Point3d;
 }
 
-export interface ServerPollingRequest {}
+export interface ServerPollingRequest {
+  position: Point2d;
+  rotation: number;
+  forkHeight: number;
+  isLoaded: boolean;
+  loadDistance: number; // Distanza dell'udm caricato dalle forche --> (( Utile al server? )) 
+}
 
 //-------------------------------------------------------------------------------------
 

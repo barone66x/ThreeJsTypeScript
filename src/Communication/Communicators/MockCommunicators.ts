@@ -398,7 +398,9 @@ export class ServerCommunicator implements IServerCommunicator {
   }
 
   public async pollingRequest(request: ServerPollingRequest): Promise<ServerPollingResponse> {
-    throw new Error("Method not implemented.");
+    const json = (await (await fetch("JsonExample/ServerPollingResponse.json")).json()) as ServerPollingResponse;
+
+    return json
   }
 }
 

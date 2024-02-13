@@ -3,6 +3,8 @@ import { ForkLift } from "./Objects/ForkLift";
 import { ModelFactory } from "./Implementations/Three/ModelFactory";
 import { Scene } from "./Implementations/Three/Scene";
 import { AbsObject } from "./Objects/AbsObject";
+import { UdmManager } from "./Utils/UdmManager";
+import { NearestUdm } from "./Utils/JsonResponses";
 
 export class SceneManager{
  
@@ -11,9 +13,12 @@ export class SceneManager{
 
   private forklift!: Promise<ForkLift>;
 
+  private udmManager: UdmManager;
+
   public constructor() {
     this.cameraManager = new CameraManager();
     this.scene = new Scene();
+    this.udmManager = new UdmManager();
   }
 
   public init(): void {
@@ -26,6 +31,14 @@ export class SceneManager{
     let getCamera = (this.cameraManager.getCurrentCamera).bind(this.cameraManager);
 
     this.scene.init(getCamera);
+  }
+
+  public handleNearestUdm(nearestUdms: NearestUdm[]) : void {    
+    this.udmManager.readNearest(nearestUdms).then(udms => {
+      udms.forEach(udm => {
+        this.scene.addToScene(udm);
+      });
+    });
   }
 
   public addToScene(object: AbsObject): void {

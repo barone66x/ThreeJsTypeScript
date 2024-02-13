@@ -106,6 +106,10 @@
       {
         "type": "Forklift",
         "path": "./models/forklift.glb"
+      },
+      {
+        "type": "Pallet",
+        "path": "./models/pallet.glb"
       }
     ],
     "areaTextures": [
