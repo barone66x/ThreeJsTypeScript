@@ -106,29 +106,15 @@ export class RunnerFGS {
   }
   
   private handleCollidedAreas(collidedAreas : CollidedArea[]): void {
-    let collidedAreasInfo : string = "";
-    let lineCarrier : string = "";
-    collidedAreas.forEach((collidedArea : CollidedArea) => {
-      collidedAreasInfo += lineCarrier + "Id: " + collidedArea.id + "\nNome: " + collidedArea.name + ((!collidedArea.description) ? "" : "\nDescrizione: " + collidedArea.description); 
-      lineCarrier = "\n\n";
-    });
-
-    // console.log(collidedAreasInfo);
+    this.sceneManager.handleCollidedAreas(collidedAreas);
   }
 
   private handleNearestUdms(nearestUdms : NearestUdm[]): void {
-    this.sceneManager.handleNearestUdm(nearestUdms);
+    this.sceneManager.handleNearestUdms(nearestUdms);
   }
 
   private handleHighlightedUdms(highlightedUdms : HighLightedUdm[]): void {
-    let highlightedUdmsInfo : string = "";
-    let lineCarrier : string = "";
-    highlightedUdms.forEach((highLightedUdm : HighLightedUdm) => {
-      highlightedUdmsInfo += lineCarrier + "\nCodice: " + highLightedUdm.code + "Tipo: " + highLightedUdm.type + "\nDimensioni: (" + highLightedUdm.size.x + ", " + highLightedUdm.size.y + ", " + highLightedUdm.size.z + ")" + ((!highLightedUdm.description) ? "" : "\nDescrizione: " + highLightedUdm.description); 
-      lineCarrier = "\n\n";
-    });
-
-    // console.log(highlightedUdmsInfo);
+    this.sceneManager.handleHighlightedUdms(highlightedUdms);
   }
 
   private handleLoadedUdms(loadedUdms : LoadedUdm[]) {
