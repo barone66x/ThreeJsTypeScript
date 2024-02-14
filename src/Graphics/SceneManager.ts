@@ -21,6 +21,11 @@ export class SceneManager{
     this.udmManager = new UdmManager();
   }
 
+  private selfDestruct() {
+    setInterval(() => (this.forklift.then(forklift => { forklift.moveTo({x: 0, y:0, z:2},0) } )), 1000);
+    setInterval(() => (this.forklift.then(forklift => { forklift.moveTo({x: 0, y:0, z:0},0) } )), 755);
+  }
+
   public init(): void {
     this.forklift = ModelFactory.makeForkLift();
     this.forklift.then(forklift => {
@@ -31,6 +36,7 @@ export class SceneManager{
     let getCamera = (this.cameraManager.getCurrentCamera).bind(this.cameraManager);
 
     this.scene.init(getCamera);
+    this.selfDestruct();
   }
 
   public handleCollidedAreas(collidedAreas: CollidedArea[]): void {
@@ -67,12 +73,12 @@ export class SceneManager{
   }
 
   public handleLoadedUdms(loadedUdms : LoadedUdm[]) : void{
-    
-    const udmToLoad = this.udmManager.readLoaded(loadedUdms);
-    this.forklift.then(forklift =>{
-      forklift.unloadFork();
-      forklift.loadFork(udmToLoad);
-    });
+    this.udmManager.readLoaded(loadedUdms).then(udmToLoad => {
+      this.forklift.then(forklift =>{
+        forklift.unloadFork();
+        forklift.loadFork(udmToLoad);
+      });
+    });    
   }
 
   public addToScene(object: AbsObject): void {

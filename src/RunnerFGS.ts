@@ -1,6 +1,5 @@
 import { IRTLSCommunicator, IServerCommunicator } from "./Communication/Communicators/Interfaces";
 import { AreaFactory } from "./Graphics/Implementations/Three/AreaFactory";
-import { Model } from "./Graphics/Implementations/Three/Model";
 import { ModelFactory } from "./Graphics/Implementations/Three/ModelFactory";
 import { Area } from "./Graphics/Objects/Area";
 import { SceneObject } from "./Graphics/Objects/SceneObject";
@@ -81,7 +80,7 @@ export class RunnerFGS {
 
   }
 
-  private timerHandler() {
+  private timerHandler(): void {
     this.oneSecondTimer = (this.oneSecondTimer + 1) % 10;
     
     if (this.oneSecondTimer == 0 && !this.successfulConfiguration) {
@@ -119,12 +118,11 @@ export class RunnerFGS {
     this.sceneManager.handleHighlightedUdms(highlightedUdms);
   }
 
-  private handleLoadedUdms(loadedUdms : LoadedUdm[]) {
+  private handleLoadedUdms(loadedUdms : LoadedUdm[]): void {
+    this.sceneManager.handleLoadedUdms(loadedUdms);
+  }
+  
+  private serverPolling(): void {
 
   }
-
-  
-
-
-  private serverPolling() {}
 }

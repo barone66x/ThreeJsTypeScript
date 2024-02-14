@@ -66,11 +66,15 @@ export class Model {
   }
 
   public detach(): void {
-    let scene = this.object.parent;
+    let scene = this.object;
+
+    this.object.traverseAncestors(parent => {
+      scene = parent
+    })
 
     while (this.attachedObjects.length > 0) {
       let model = this.attachedObjects.shift();
-      scene?.add(model?.getObject());
+      scene.attach(model?.getObject());
     }
   }
 

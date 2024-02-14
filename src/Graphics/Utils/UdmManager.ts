@@ -1,7 +1,6 @@
-import { json } from "stream/consumers";
 import { ModelFactory } from "../Implementations/Three/ModelFactory";
 import { UDM } from "../Objects/UDM";
-import { HighLightedUdm, LoadedUdm, NearestUdm, ServerPollingResponse } from "./JsonResponses";
+import { HighLightedUdm, LoadedUdm, NearestUdm } from "./JsonResponses";
 import { ModelTypes } from "./ModelTypes";
 
 export class UdmManager {
@@ -16,6 +15,7 @@ export class UdmManager {
   private loadedUdms: {
     [id: number]: UDM;
   };
+
   private maxUdmsNumber: number;
 
   public constructor(maxUdmsNumber: number = 1000) {
@@ -30,7 +30,9 @@ export class UdmManager {
 
     for await (const jsonUdm of response) {
       if (this.udms[jsonUdm.id]) {
-        this.udms[jsonUdm.id].moveTo(jsonUdm.position, jsonUdm.rotation);
+        if(!this.loadedUdms[jsonUdm.id]) {
+          this.udms[jsonUdm.id].moveTo(jsonUdm.position, jsonUdm.rotation);
+        }
       } else {
         await this.addUmd(jsonUdm);
         res.push(this.udms[jsonUdm.id]);
@@ -39,11 +41,6 @@ export class UdmManager {
 
     return res;
   }
-
-  //PENSARE
-  //SE CHIAMO PRIMA NEAREST E POI HIGHLIGHTED POSSO AVERE LA STESSA BOBINA SIA NELLE NEAREST CHE NELL'ALTRA CATEGORIA PERCHé PRIMA NON LE EVIDENZIO E POI SI
-  //OPPURE
-  //CI FACCIAMO DARE LA POSIZIONE DI ENTRAMBE LE LISTE E NON ABBIAMO BOBINE DUPLICATE?
 
   public readHighlighted(response: HighLightedUdm[]): void {
     Object.keys(this.highlightedUdms).forEach(key =>{
@@ -59,15 +56,19 @@ export class UdmManager {
     });
   }
 
-  public readLoaded(response: LoadedUdm[]): UDM[] {
+  public async readLoaded(response: LoadedUdm[]): Promise<UDM[]> {
     const udmsToLoad: UDM[] = [];
+
     Object.keys(this.loadedUdms).forEach(key =>{
-        delete this.loadedUdms[parseInt(key)];
+      delete this.loadedUdms[parseInt(key)];
     });
-    response.forEach((jsonUdm) => {
-      this.loadedUdms[jsonUdm.id] = this.udms[jsonUdm.id];
-      udmsToLoad.push(this.loadedUdms[jsonUdm.id]);
-    });
+    
+    for await (const jsonUdm of response) {
+      if (this.udms[jsonUdm.id]) {
+        this.loadedUdms[jsonUdm.id] = this.udms[jsonUdm.id];
+        udmsToLoad.push(this.udms[jsonUdm.id]);
+      }
+    }
     return udmsToLoad;
   }
 

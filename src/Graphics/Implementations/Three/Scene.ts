@@ -1,11 +1,6 @@
 import * as THREE from "three";
 import { AbsObject } from "../../Objects/AbsObject";
 
-
-interface CameraDelegate{
-    () : THREE.PerspectiveCamera;
-}
-
 export class Scene{
     private scene: THREE.Scene;
     private renderer: THREE.WebGLRenderer;
