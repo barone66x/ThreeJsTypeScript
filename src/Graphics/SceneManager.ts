@@ -6,8 +6,7 @@ import { AbsObject } from "./Objects/AbsObject";
 import { UdmManager } from "./Utils/UdmManager";
 import { CollidedArea, HighLightedUdm, LoadedUdm, NearestUdm } from "./Utils/JsonResponses";
 
-export class SceneManager{
- 
+export class SceneManager {
   private scene: Scene;
   private cameraManager: CameraManager;
 
@@ -21,72 +20,92 @@ export class SceneManager{
     this.udmManager = new UdmManager();
   }
 
-  private selfDestruct() {
-    setInterval(() => (this.forklift.then(forklift => { forklift.moveTo({x: 0, y:0, z:2},0) } )), 1000);
-    setInterval(() => (this.forklift.then(forklift => { forklift.moveTo({x: 0, y:0, z:0},0) } )), 755);
-  }
-
   public init(): void {
     this.forklift = ModelFactory.makeForkLift();
-    this.forklift.then(forklift => {
+    this.forklift.then((forklift) => {
       this.addToScene(forklift);
     });
 
-    window.addEventListener("resize", () => {this.onWindowResize()})
-    let getCamera = (this.cameraManager.getCurrentCamera).bind(this.cameraManager);
+    window.addEventListener("resize", () => {
+      this.onWindowResize();
+    });
+    let getCamera = this.cameraManager.getCurrentCamera.bind(this.cameraManager);
 
     this.scene.init(getCamera);
-    this.selfDestruct();
   }
 
   public handleCollidedAreas(collidedAreas: CollidedArea[]): void {
-    let collidedAreasInfo : string = "";
-    let lineCarrier : string = "";
-    
-    collidedAreas.forEach((collidedArea : CollidedArea) => {
-      collidedAreasInfo += lineCarrier + "Id: " + collidedArea.id + "\nNome: " + collidedArea.name + ((!collidedArea.description) ? "" : "\nDescrizione: " + collidedArea.description); 
+    let collidedAreasInfo: string = "";
+    let lineCarrier: string = "";
+
+    collidedAreas.forEach((collidedArea: CollidedArea) => {
+      collidedAreasInfo +=
+        lineCarrier +
+        "Id: " +
+        collidedArea.id +
+        "\nNome: " +
+        collidedArea.name +
+        (!collidedArea.description ? "" : "\nDescrizione: " + collidedArea.description);
       lineCarrier = "\n\n";
     });
-
   }
 
-  public handleNearestUdms(nearestUdms: NearestUdm[]) : void {    
-    this.udmManager.readNearest(nearestUdms).then(udms => {
-      udms.forEach(udm => {
+  public handleNearestUdms(nearestUdms: NearestUdm[]): void {
+    this.udmManager.readNearest(nearestUdms).then((udms) => {
+      udms.forEach((udm) => {
         this.scene.addToScene(udm);
+      });
+
+      this.forklift.then((forklift) => {
+        this.udmManager.getHiddenUdms().forEach((udm) => {
+          if (forklift.distanceToUdm(udm) > this.udmManager.getMaxDistanceToRender()) {
+            this.udmManager.removeUdm(udm);
+          }
+        });
       });
     });
   }
 
   public handleHighlightedUdms(highlightedUdms: HighLightedUdm[]): void {
-    
     this.udmManager.readHighlighted(highlightedUdms);
 
-    let highlightedUdmsInfo : string = "";
-    let lineCarrier : string = "";
-    
-    highlightedUdms.forEach((highLightedUdm : HighLightedUdm) => {
-      highlightedUdmsInfo += lineCarrier + "\nCodice: " + highLightedUdm.code + "Tipo: " + highLightedUdm.type + "\nDimensioni: (" + highLightedUdm.size.x + ", " + highLightedUdm.size.y + ", " + highLightedUdm.size.z + ")" + ((!highLightedUdm.description) ? "" : "\nDescrizione: " + highLightedUdm.description); 
+    let highlightedUdmsInfo: string = "";
+    let lineCarrier: string = "";
+
+    highlightedUdms.forEach((highLightedUdm: HighLightedUdm) => {
+      highlightedUdmsInfo +=
+        lineCarrier +
+        "\nCodice: " +
+        highLightedUdm.code +
+        "Tipo: " +
+        highLightedUdm.type +
+        "\nDimensioni: (" +
+        highLightedUdm.size.x +
+        ", " +
+        highLightedUdm.size.y +
+        ", " +
+        highLightedUdm.size.z +
+        ")" +
+        (!highLightedUdm.description ? "" : "\nDescrizione: " + highLightedUdm.description);
       lineCarrier = "\n\n";
     });
-
   }
 
-  public handleLoadedUdms(loadedUdms : LoadedUdm[]) : void{
-    this.udmManager.readLoaded(loadedUdms).then(udmToLoad => {
-      this.forklift.then(forklift =>{
+  public handleLoadedUdms(loadedUdms: LoadedUdm[]): void {
+    this.udmManager.readLoaded(loadedUdms).then((udmToLoad) => {
+      this.forklift.then((forklift) => {
         forklift.unloadFork();
         forklift.loadFork(udmToLoad);
       });
-    });    
+    });
   }
 
   public addToScene(object: AbsObject): void {
     this.scene.addToScene(object);
   }
 
-  private onWindowResize(): void{
+  private onWindowResize(): void {
     this.cameraManager.onWindowResize();
     this.scene.onWindowResize();
-  };
+  }
 }

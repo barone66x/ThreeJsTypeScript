@@ -400,12 +400,13 @@ export class ServerCommunicator implements IServerCommunicator {
   public async pollingRequest(request: ServerPollingRequest): Promise<ServerPollingResponse> {
     const json = (await (await fetch("JsonExample/ServerPollingResponse.json")).json()) as ServerPollingResponse;
 
-    return json
+    return json;
   }
 }
 
 export class RTLSCommunicator implements IRTLSCommunicator {
-  pollingRequest(request: RTLSPollingRequest): Promise<RTLSPollingResponse> {
-    throw new Error("Method not implemented.");
+  async pollingRequest(request: RTLSPollingRequest): Promise<RTLSPollingResponse> {
+    const json = (await (await fetch("https://localhost:7157/Forklift/GetPosition")).json()) as RTLSPollingResponse;
+    return json;
   }
 }

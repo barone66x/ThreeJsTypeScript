@@ -28,4 +28,15 @@ export class ForkLift extends AbsObject implements IMovable {
   public setForkHeight(height: number): void {
     this.fork.raiseTo(height);
   }
+
+  public distanceToUdm(udm : UDM) : number {
+    const udmPosition= udm.get2DPosition();
+    const forkliftPosition = this.model.get2DPosition();
+
+    const deltaX = udmPosition.x - forkliftPosition.x;
+    const deltaY = udmPosition.y - forkliftPosition.y;
+    
+    const res = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+    return res;
+  }
 }

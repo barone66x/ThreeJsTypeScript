@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { ModelTypes } from "../../Utils/ModelTypes";
-import { Point3d } from "../../Utils/Point";
-import { ModelFactory } from "./ModelFactory";
+import { Point2d, Point3d } from "../../Utils/Point";
 import { AbsObject } from "../../Objects/AbsObject";
 
 export class Model {
@@ -13,13 +12,6 @@ export class Model {
     this.object = object;
     this.type = type;
     this.attachedObjects = [];
-  }
-
-  public getType(): ModelTypes {
-    return this.type;
-  }
-  public getObject(): any {
-    return this.object;
   }
 
   private realAngleToGraphicAngle(rotation: number): number {
@@ -50,6 +42,21 @@ export class Model {
     });
   }
 
+  public getVisibility(): boolean {
+    return this.object.visible;
+  }
+  public get2DPosition(): Point2d {
+    return new Point2d(this.object.position.x, this.object.position.y);
+  }
+
+  public getType(): ModelTypes {
+    return this.type;
+  }
+
+  public getObject(): any {
+    return this.object;
+  }
+
   public show(): void {
     this.object.visible = true;
   }
@@ -68,9 +75,9 @@ export class Model {
   public detach(): void {
     let scene = this.object;
 
-    this.object.traverseAncestors(parent => {
-      scene = parent
-    })
+    this.object.traverseAncestors((parent) => {
+      scene = parent;
+    });
 
     while (this.attachedObjects.length > 0) {
       let model = this.attachedObjects.shift();
@@ -85,5 +92,9 @@ export class Model {
   public moveTo(position: Point3d, rotation: number): void {
     this.setPosition(position);
     this.setRotation(rotation);
+  }
+
+  public remove(): void {
+    this.object.removeFromParent();
   }
 }
