@@ -70,18 +70,16 @@ export class ForkLift extends AbsObject implements IMovable {
     this.speed.x = (position.x - this.oldPosition.position.x) / milliseconds;
     this.speed.y = (position.y - this.oldPosition.position.y) / milliseconds;
 
-
     const deltaRotation = rotation - this.oldPosition.rotation;
 
     if(deltaRotation < 180 && deltaRotation > -180) {
       this.speed.rotation = deltaRotation / milliseconds;
     }else if(deltaRotation < -180) {
-      this.speed.rotation = (360 - this.oldPosition.rotation - rotation) / milliseconds;
+      this.speed.rotation = (360 + rotation - this.oldPosition.rotation ) / milliseconds;
     }else {
-      this.speed.rotation = -(360 - this.oldPosition.rotation - rotation) / milliseconds;
+      this.speed.rotation = -(360 + this.oldPosition.rotation - rotation) / milliseconds;
     }
 
-    // this.speed.rotation = ((rotation - this.oldPosition.rotation < 180 && rotation - this.oldPosition.rotation > -180) ? (rotation - this.oldPosition.rotation) : ((this.oldPosition.rotation) / Math.abs(this.oldPosition.rotation)) * (360 - this.oldPosition.rotation - rotation)) / milliseconds;
     this.speed.forkHeight = (forkHeight - this.oldPosition.forkHeight) / milliseconds;
 
     this.smoothMovement(this.oldPosition.position, this.oldPosition.rotation, this.oldPosition.forkHeight, Date.now());
