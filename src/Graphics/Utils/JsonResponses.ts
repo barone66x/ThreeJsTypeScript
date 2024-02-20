@@ -80,6 +80,18 @@ export interface ServerPollingRequest {
 //-------------------------------------------------------------------------------------
 
 export interface RTLSPollingRequest {}
-export interface RTLSPollingResponse {}
+export interface RTLSPollingResponse {
+  forkliftId: number,
+  partnerKey: string,
+  position: positionInformation
+}
 
-
+export interface positionInformation {
+  valid: boolean,
+  x: number,
+  y: number,
+  orientation: number,
+  loaded: boolean,
+  forkHeight: number,
+  distance: number
+} 

@@ -4,7 +4,8 @@ import { ModelFactory } from "./Implementations/Three/ModelFactory";
 import { Scene } from "./Implementations/Three/Scene";
 import { AbsObject } from "./Objects/AbsObject";
 import { UdmManager } from "./Utils/UdmManager";
-import { CollidedArea, HighLightedUdm, LoadedUdm, NearestUdm } from "./Utils/JsonResponses";
+import { CollidedArea, HighLightedUdm, LoadedUdm, NearestUdm, positionInformation } from "./Utils/JsonResponses";
+import { Point3d } from "./Utils/Point";
 
 export class SceneManager {
   private scene: Scene;
@@ -102,6 +103,12 @@ export class SceneManager {
 
   public addToScene(object: AbsObject): void {
     this.scene.addToScene(object);
+  }
+
+  public moveForklift(json: positionInformation): void {
+    this.forklift.then(forklift => {
+      forklift.setSmoothMoveTo(new Point3d(json.x, json.y, 0), json.orientation, json.forkHeight, 500);
+    })
   }
 
   private onWindowResize(): void {

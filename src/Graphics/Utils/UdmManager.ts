@@ -106,7 +106,7 @@ export class UdmManager {
   public getHiddenUdms(): UDM[] {
     let response: UDM[] = [];
     Object.keys(this.udms).forEach((key) => {
-      if (this.udms[parseInt(key)].getVisibility()) {
+      if (!this.loadedUdms[parseInt(key)] && this.udms[parseInt(key)].getVisibility()) {
         response.push(this.udms[parseInt(key)]);
       }
     });

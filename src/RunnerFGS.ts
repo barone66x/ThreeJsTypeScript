@@ -13,6 +13,7 @@ import {
   LoadedUdm,
   NearestUdm,
   RTLSPollingRequest,
+  RTLSPollingResponse,
   ServerPollingRequest,
   ServerPollingResponse,
 } from "./Graphics/Utils/JsonResponses";
@@ -35,7 +36,7 @@ export class RunnerFGS {
     this.sceneManager = sceneManager;
 
     this.oneSecondTimer = 9;
-    setInterval(() => this.timerHandler(), 250);
+    setInterval(() => this.timerHandler(), 500);
   }
 
   public init(): void {
@@ -105,26 +106,23 @@ export class RunnerFGS {
         isLoaded: false,
         loadDistance: 0,
       };
-      this.serverCommunicator
-        .pollingRequest(serverReq)
-        .then((res: ServerPollingResponse) => {
+      this.serverCommunicator.pollingRequest(serverReq).then((res: ServerPollingResponse) => {
           this.handleCollidedAreas(res.collidedAreas);
-
           this.handleNearestUdms(res.nearestUdms);
-
           this.handleHighlightedUdms(res.highlightedUdms);
-
           this.handleLoadedUdms(res.loadedUdms);
-        })
-        .catch((error) => {
+
+        }).catch((error) => {
           console.log(error);
           this.successfulConfiguration = false;
         });
 
       const rtlsReq: RTLSPollingRequest = {};
-      this.rtlsCommunicator.pollingRequest(rtlsReq).then((res: RTLSPollingRequest) => {
-        
-      });
+      this.rtlsCommunicator.pollingRequest(rtlsReq).then((res: RTLSPollingResponse) => {
+        this.sceneManager.moveForklift(res.position);
+      }).catch((error) => {
+        console.log(error);
+      });;
     }
   }
 
