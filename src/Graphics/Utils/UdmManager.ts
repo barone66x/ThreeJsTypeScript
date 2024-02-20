@@ -1,6 +1,6 @@
 import { ModelFactory } from "../Implementations/Three/ModelFactory";
 import { UDM } from "../Objects/UDM";
-import { HighLightedUdm, LoadedUdm, NearestUdm } from "./JsonResponses";
+import {  NearestUdm } from "./JsonResponses";
 import { ModelTypes } from "./ModelTypes";
 
 export class UdmManager {
@@ -54,31 +54,31 @@ export class UdmManager {
     return res;
   }
 
-  public readHighlighted(response: HighLightedUdm[]): void {
+  public readHighlighted(response: number[]): void {
     Object.keys(this.highlightedUdms).forEach((key) => {
       this.highlightedUdms[parseInt(key)].setHightlightOff();
       delete this.highlightedUdms[parseInt(key)];
     });
 
-    response.forEach((jsonUdm) => {
-      if (this.udms[jsonUdm.id]) {
-        this.highlightedUdms[jsonUdm.id] = this.udms[jsonUdm.id];
-        this.highlightedUdms[jsonUdm.id].setHightlightOn();
+    response.forEach((jsonUdmId) => {
+      if (this.udms[jsonUdmId]) {
+        this.highlightedUdms[jsonUdmId] = this.udms[jsonUdmId];
+        this.highlightedUdms[jsonUdmId].setHightlightOn();
       }
     });
   }
 
-  public async readLoaded(response: LoadedUdm[]): Promise<UDM[]> {
+  public async readLoaded(response: number[]): Promise<UDM[]> {
     const udmsToLoad: UDM[] = [];
 
     Object.keys(this.loadedUdms).forEach((key) => {
       delete this.loadedUdms[parseInt(key)];
     });
 
-    for await (const jsonUdm of response) {
-      if (this.udms[jsonUdm.id]) {
-        this.loadedUdms[jsonUdm.id] = this.udms[jsonUdm.id];
-        udmsToLoad.push(this.udms[jsonUdm.id]);
+    for await (const jsonUdmId of response) {
+      if (this.udms[jsonUdmId]) {
+        this.loadedUdms[jsonUdmId] = this.udms[jsonUdmId];
+        udmsToLoad.push(this.udms[jsonUdmId]);
       }
     }
 

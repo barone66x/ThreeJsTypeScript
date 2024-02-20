@@ -4,7 +4,7 @@ import { ModelFactory } from "./Implementations/Three/ModelFactory";
 import { Scene } from "./Implementations/Three/Scene";
 import { AbsObject } from "./Objects/AbsObject";
 import { UdmManager } from "./Utils/UdmManager";
-import { CollidedArea, HighLightedUdm, LoadedUdm, NearestUdm, positionInformation } from "./Utils/JsonResponses";
+import { InformationToShow, NearestUdm, positionInformation } from "./Utils/JsonResponses";
 import { Point3d } from "./Utils/Point";
 
 export class SceneManager {
@@ -35,21 +35,7 @@ export class SceneManager {
     this.scene.init(getCamera);
   }
 
-  public handleCollidedAreas(collidedAreas: CollidedArea[]): void {
-    let collidedAreasInfo: string = "";
-    let lineCarrier: string = "";
-
-    collidedAreas.forEach((collidedArea: CollidedArea) => {
-      collidedAreasInfo +=
-        lineCarrier +
-        "Id: " +
-        collidedArea.id +
-        "\nNome: " +
-        collidedArea.name +
-        (!collidedArea.description ? "" : "\nDescrizione: " + collidedArea.description);
-      lineCarrier = "\n\n";
-    });
-  }
+  
 
   public handleNearestUdms(nearestUdms: NearestUdm[]): void {
     this.udmManager.readNearest(nearestUdms).then((udms) => {
@@ -67,38 +53,22 @@ export class SceneManager {
     });
   }
 
-  public handleHighlightedUdms(highlightedUdms: HighLightedUdm[]): void {
-    this.udmManager.readHighlighted(highlightedUdms);
+  public handleHighlightedUdms(highlightedUdmIds: number[]): void {
+    this.udmManager.readHighlighted(highlightedUdmIds);
 
-    let highlightedUdmsInfo: string = "";
-    let lineCarrier: string = "";
-
-    highlightedUdms.forEach((highLightedUdm: HighLightedUdm) => {
-      highlightedUdmsInfo +=
-        lineCarrier +
-        "\nCodice: " +
-        highLightedUdm.code +
-        "Tipo: " +
-        highLightedUdm.type +
-        "\nDimensioni: (" +
-        highLightedUdm.size.x +
-        ", " +
-        highLightedUdm.size.y +
-        ", " +
-        highLightedUdm.size.z +
-        ")" +
-        (!highLightedUdm.description ? "" : "\nDescrizione: " + highLightedUdm.description);
-      lineCarrier = "\n\n";
-    });
   }
 
-  public handleLoadedUdms(loadedUdms: LoadedUdm[]): void {
-    this.udmManager.readLoaded(loadedUdms).then((udmToLoad) => {
+  public handleLoadedUdms(loadedUdmIds: number[]): void {
+    this.udmManager.readLoaded(loadedUdmIds).then((udmToLoad) => {
       this.forklift.then((forklift) => {
         forklift.unloadFork();
         forklift.loadFork(udmToLoad);
       });
     });
+  }
+
+  public handleInformationToShow(informationToShow : InformationToShow[]) : void{
+    
   }
 
   public addToScene(object: AbsObject): void {

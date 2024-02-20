@@ -6,11 +6,8 @@ import { SceneObject } from "./Graphics/Objects/SceneObject";
 import { UDM } from "./Graphics/Objects/UDM";
 import { SceneManager } from "./Graphics/SceneManager";
 import {
-  CollidedArea,
-  HighLightedUdm,
   InitialConfigRequest,
   InitialConfigResponse,
-  LoadedUdm,
   NearestUdm,
   RTLSPollingRequest,
   RTLSPollingResponse,
@@ -106,39 +103,38 @@ export class RunnerFGS {
         isLoaded: false,
         loadDistance: 0,
       };
-      this.serverCommunicator.pollingRequest(serverReq).then((res: ServerPollingResponse) => {
-          this.handleCollidedAreas(res.collidedAreas);
+      this.serverCommunicator
+        .pollingRequest(serverReq)
+        .then((res: ServerPollingResponse) => {
           this.handleNearestUdms(res.nearestUdms);
           this.handleHighlightedUdms(res.highlightedUdms);
           this.handleLoadedUdms(res.loadedUdms);
-
-        }).catch((error) => {
+        })
+        .catch((error) => {
           console.log(error);
-          this.successfulConfiguration = false;
         });
 
       const rtlsReq: RTLSPollingRequest = {};
-      this.rtlsCommunicator.pollingRequest(rtlsReq).then((res: RTLSPollingResponse) => {
-        this.sceneManager.moveForklift(res.position);
-      }).catch((error) => {
-        console.log(error);
-      });;
+      this.rtlsCommunicator
+        .pollingRequest(rtlsReq)
+        .then((res: RTLSPollingResponse) => {
+          this.sceneManager.moveForklift(res.position);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     }
-  }
-
-  private handleCollidedAreas(collidedAreas: CollidedArea[]): void {
-    this.sceneManager.handleCollidedAreas(collidedAreas);
   }
 
   private handleNearestUdms(nearestUdms: NearestUdm[]): void {
     this.sceneManager.handleNearestUdms(nearestUdms);
   }
 
-  private handleHighlightedUdms(highlightedUdms: HighLightedUdm[]): void {
-    this.sceneManager.handleHighlightedUdms(highlightedUdms);
+  private handleHighlightedUdms(highlightedUdmIds: number[]): void {
+    this.sceneManager.handleHighlightedUdms(highlightedUdmIds);
   }
 
-  private handleLoadedUdms(loadedUdms: LoadedUdm[]): void {
-    this.sceneManager.handleLoadedUdms(loadedUdms);
+  private handleLoadedUdms(loadedUdmIds: number[]): void {
+    this.sceneManager.handleLoadedUdms(loadedUdmIds);
   }
 }

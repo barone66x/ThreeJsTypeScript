@@ -34,9 +34,9 @@ export interface InitialConfigResponse {
 }
 export interface ServerPollingResponse {
   nearestUdms: NearestUdm[];
-  collidedAreas: CollidedArea[];
-  highlightedUdms: HighLightedUdm[];
-  loadedUdms: LoadedUdm[];
+  highlightedUdms: number[];
+  loadedUdms: number[];
+  informationToShow : InformationToShow[];
 }
 
 export interface NearestUdm {
@@ -47,26 +47,12 @@ export interface NearestUdm {
   rotation: number;
 }
 
-export interface CollidedArea {
-  id: number;
-  name: string;
-  description: string;
-}
 
-export interface HighLightedUdm {
-  id: number;
-  code: string;
-  description: string;
-  type: string;
-  size: Point3d;
-}
 
-export interface LoadedUdm {
-  id: number;
-  code: string;
-  description: string;
-  type: string;
-  size: Point3d;
+export interface InformationToShow{
+  type : string;
+  content : string;
+  color : string;
 }
 
 export interface ServerPollingRequest {

@@ -31,42 +31,23 @@
       "rotation": 90
     }
   ],
-  "collidedAreas": [
-    {
-      "id": 1,
-      "name": "lorem ipsum",
-      "description": "lorem ipsum"
-    },
-    {
-      "id": 2,
-      "name": "lorem ipsum",
-      "description": "lorem ipsum"
-    }
-  ],
+  
   "highlightedUdms": [
-    {
-      "id": 1,
-      "code": "1111aaaaaa",
-      "description": "lorem ipsum",
-      "type": "coil",
-      "size": {
-        "x": 1,
-        "z": 2,
-        "y": 1
-      }
-    }
+    1
   ],
   "loadedUdms": [
+    2
+  ],
+  "informationToShow": [
     {
-      "id": 2,
-      "code": "1111aaaaaa",
-      "description": "lorem ipsum",
-      "type": "coil",
-      "size": {
-        "x": 1,
-        "z": 2,
-        "y": 1
-      }
+      "type" : "errorMessage",
+      "content" : "error lorem",
+      "color" : "default"
+    },
+    {
+      "type" : "udmInformation",
+      "content": "size: 1,1,1",
+      "color" : "white"
     }
   ]
 }
