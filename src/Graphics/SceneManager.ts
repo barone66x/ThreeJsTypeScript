@@ -25,6 +25,7 @@ export class SceneManager {
     this.forklift = ModelFactory.makeForkLift();
     this.forklift.then((forklift) => {
       this.addToScene(forklift);
+      this.cameraManager.addCameraToObject(forklift, new Point3d(0, -2.2, 3), 0);
     });
 
     window.addEventListener("resize", () => {
@@ -34,8 +35,6 @@ export class SceneManager {
 
     this.scene.init(getCamera);
   }
-
-  
 
   public handleNearestUdms(nearestUdms: NearestUdm[]): void {
     this.udmManager.readNearest(nearestUdms).then((udms) => {

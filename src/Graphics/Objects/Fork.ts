@@ -6,8 +6,6 @@ import { UDM } from "./UDM";
 
 export class Fork extends AbsObject implements IComposable, IRaisable {
 
-  
-
   public constructor(model: Model, initialHeight: number) {
     super(model);
     this.raiseTo(initialHeight);

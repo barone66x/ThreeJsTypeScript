@@ -19,7 +19,7 @@ export class UdmManager {
   private maxUdmNumber: number;
   private maxDistanceToRender: number;
 
-  public constructor(maxUdmNumber: number = 1000, maxDistanceToRender: number = 25) {
+  public constructor(maxUdmNumber: number = 1000, maxDistanceToRender: number = 1000) {
     this.maxUdmNumber = maxUdmNumber;
     this.maxDistanceToRender = maxDistanceToRender;
 
