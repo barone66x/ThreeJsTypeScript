@@ -36,11 +36,12 @@ export class RunnerFGS {
     this.sceneManager = sceneManager;
     this.guiManager = guiManager;
 
+    rtlsCommunicator.subscribeToConnection(guiManager);
     rtlsCommunicator.subscribeToPolling(sceneManager);
-    serverCommunicator.subscribeToPolling(sceneManager);
 
     serverCommunicator.subscribeToConnection(guiManager);
     serverCommunicator.subscribeToPolling(guiManager);
+    serverCommunicator.subscribeToPolling(sceneManager);
 
     this.oneSecondTimer = 9;
     setInterval(() => this.timerHandler(), 500);
