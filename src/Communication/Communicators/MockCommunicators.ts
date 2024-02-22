@@ -6,14 +6,26 @@ import {
   ServerPollingRequest,
   ServerPollingResponse,
 } from "../../Graphics/Utils/JsonResponses";
+
+import { IRTLSPollingObserver, IServerConnectionObserver, IServerInitialConfigObserver, IServerPollingObserver } from "./Interfaces"
+
 import { IRTLSCommunicator, IServerCommunicator } from "./Interfaces";
 import Ajv from "ajv";
 
 export class ServerCommunicator implements IServerCommunicator {
   private schema;
+  private isConnectionOk: boolean;
   private IsValid: (json: any) => boolean;
-
+  private connectionObserver: IServerConnectionObserver[];
+  private pollingObserver: IServerPollingObserver[];
+  private initialObserver: IServerInitialConfigObserver[];
+ 
   public constructor() {
+    this.isConnectionOk = false;
+    this.connectionObserver = [];
+    this.pollingObserver = [];
+    this.initialObserver = [];
+ 
     this.schema = {
       type: "object",
       properties: {
@@ -384,29 +396,112 @@ export class ServerCommunicator implements IServerCommunicator {
       },
       required: ["floors", "areas", "sceneObjects", "modelsAndTextures"],
     };
-
+ 
     this.IsValid = new Ajv({ strictTuples: false }).compile(this.schema);
   }
-
-  public async initRequest(request: InitialConfigRequest): Promise<InitialConfigResponse> {
-    const json = (await (await fetch("JsonExample/InitialConfigResponse.json")).json()) as InitialConfigResponse;
-
-    if (this.IsValid(json)) {
-      return json;
-    }
-    throw new Error("Not valid InitialConfigResponse Json");
+  public subscribeToConnection(obs: IServerConnectionObserver): void {
+    this.connectionObserver.push(obs);
   }
-
+  subscribeToPolling(obs: IServerPollingObserver): void {
+    this.pollingObserver.push(obs);  
+  }
+  subscribeToInitialConfig(obs: IServerInitialConfigObserver): void {
+    this.initialObserver.push(obs);  
+  }
+ 
+  public async initRequest(request: InitialConfigRequest): Promise<InitialConfigResponse> {
+    try {
+      const json = (await (await fetch("JsonExample/InitialConfigResponse.json")).json()) as InitialConfigResponse;
+      //controllare
+      if (this.isConnectionOk == false) {
+        this.notifyConnectionUpObserver();
+      }
+      this.isConnectionOk = true;
+ 
+      if (this.IsValid(json)) {
+        this.notifyInitialObserver(json);
+        return json;
+      }
+      throw new Error("Not valid InitialConfigResponse Json");
+    } catch (error) {
+      console.log(error);
+      //controllare
+      if (this.isConnectionOk == true) {
+        this.notifyConnectionDownObserver();
+      }
+      this.isConnectionOk = false;
+      throw new Error("Connection Error");
+    }
+  }
+ 
   public async pollingRequest(request: ServerPollingRequest): Promise<ServerPollingResponse> {
-    const json = (await (await fetch("JsonExample/ServerPollingResponse.json")).json()) as ServerPollingResponse;
-
-    return json;
+    try {
+      const json = (await (await fetch("JsonExample/ServerPollingResponse.json")).json()) as ServerPollingResponse;
+ 
+      if (this.isConnectionOk == false) {
+        this.notifyConnectionUpObserver();
+      }
+      this.isConnectionOk = true;
+ 
+      this.isConnectionOk = true;
+      this.notifyPollingObserver(json);
+      return json;
+    } catch (error) {
+      //console.log(error);
+ 
+      if (this.isConnectionOk == true) {
+        this.notifyConnectionDownObserver();
+      }
+ 
+      this.isConnectionOk = false;
+      throw new Error("Connection Error");
+    }
+  }
+ 
+ 
+  public notifyConnectionUpObserver(): void {
+    this.connectionObserver.forEach((observer) => {
+      observer.onServerConnectionUp();
+    });
+  }
+ 
+  public notifyConnectionDownObserver(): void {
+    this.connectionObserver.forEach((observer) => {
+      observer.onServerConnectionDown();
+    });
+  }
+ 
+  public notifyInitialObserver(response: InitialConfigResponse): void {
+    this.initialObserver.forEach((obsever) => {
+      obsever.onInitialConfig(response);
+    });
+  }
+ 
+  public notifyPollingObserver(response: ServerPollingResponse): void {
+    this.pollingObserver.forEach((obsever) => {
+      obsever.onServerPolling(response);
+    });
   }
 }
 
 export class RTLSCommunicator implements IRTLSCommunicator {
+
+  private pollingObservers : IRTLSPollingObserver[]
+
+  public constructor() {
+    this.pollingObservers = []
+  } 
+
+  public subscribeToPolling(obs: IRTLSPollingObserver): void {
+    this.pollingObservers.push(obs);
+  }
+
   async pollingRequest(request: RTLSPollingRequest): Promise<RTLSPollingResponse> {
     const json = (await (await fetch("https://localhost:7157/Forklift/GetPosition")).json()) as RTLSPollingResponse;
+    this.pollingObservers.forEach(obs => {
+      obs.onRTLSPolling(json)
+    });
+
     return json;
   }
 }

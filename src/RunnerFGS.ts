@@ -1,4 +1,5 @@
 import { IRTLSCommunicator, IServerCommunicator } from "./Communication/Communicators/Interfaces";
+import { GuiManager } from "./Graphics/GuiManager";
 import { AreaFactory } from "./Graphics/Implementations/Three/AreaFactory";
 import { ModelFactory } from "./Graphics/Implementations/Three/ModelFactory";
 import { Area } from "./Graphics/Objects/Area";
@@ -8,7 +9,6 @@ import { SceneManager } from "./Graphics/SceneManager";
 import {
   InitialConfigRequest,
   InitialConfigResponse,
-  NearestUdm,
   RTLSPollingRequest,
   RTLSPollingResponse,
   ServerPollingRequest,
@@ -22,15 +22,25 @@ export class RunnerFGS {
   private serverCommunicator: IServerCommunicator;
 
   private sceneManager: SceneManager;
+  private guiManager: GuiManager;
 
   private successfulConfiguration: boolean;
   private oneSecondTimer: number;
 
-  constructor(rtlsCommunicator: IRTLSCommunicator, serverCommunicator: IServerCommunicator, sceneManager: SceneManager) {
+  constructor(rtlsCommunicator: IRTLSCommunicator, serverCommunicator: IServerCommunicator, sceneManager: SceneManager, guiManager: GuiManager) {
     this.rtlsCommunicator = rtlsCommunicator;
     this.serverCommunicator = serverCommunicator;
+    
     this.successfulConfiguration = false;
+    
     this.sceneManager = sceneManager;
+    this.guiManager = guiManager;
+
+    rtlsCommunicator.subscribeToPolling(sceneManager);
+    serverCommunicator.subscribeToPolling(sceneManager);
+
+    serverCommunicator.subscribeToConnection(guiManager);
+    serverCommunicator.subscribeToPolling(guiManager);
 
     this.oneSecondTimer = 9;
     setInterval(() => this.timerHandler(), 500);
@@ -106,9 +116,7 @@ export class RunnerFGS {
       this.serverCommunicator
         .pollingRequest(serverReq)
         .then((res: ServerPollingResponse) => {
-          this.handleNearestUdms(res.nearestUdms);
-          this.handleHighlightedUdms(res.highlightedUdms);
-          this.handleLoadedUdms(res.loadedUdms);
+
         })
         .catch((error) => {
           console.log(error);
@@ -118,23 +126,11 @@ export class RunnerFGS {
       this.rtlsCommunicator
         .pollingRequest(rtlsReq)
         .then((res: RTLSPollingResponse) => {
-          this.sceneManager.moveForklift(res.position);
+
         })
         .catch((error) => {
           console.log(error);
         });
     }
-  }
-
-  private handleNearestUdms(nearestUdms: NearestUdm[]): void {
-    this.sceneManager.handleNearestUdms(nearestUdms);
-  }
-
-  private handleHighlightedUdms(highlightedUdmIds: number[]): void {
-    this.sceneManager.handleHighlightedUdms(highlightedUdmIds);
-  }
-
-  private handleLoadedUdms(loadedUdmIds: number[]): void {
-    this.sceneManager.handleLoadedUdms(loadedUdmIds);
   }
 }

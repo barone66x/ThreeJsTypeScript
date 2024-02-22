@@ -4,10 +4,11 @@ import { ModelFactory } from "./Implementations/Three/ModelFactory";
 import { Scene } from "./Implementations/Three/Scene";
 import { AbsObject } from "./Objects/AbsObject";
 import { UdmManager } from "./Utils/UdmManager";
-import { InformationToShow, NearestUdm, positionInformation } from "./Utils/JsonResponses";
+import { InformationToShow, NearestUdm, RTLSPollingResponse, ServerPollingResponse, positionInformation } from "./Utils/JsonResponses";
 import { Point3d } from "./Utils/Point";
+import { IRTLSPollingObserver, IServerPollingObserver } from "../Communication/Communicators/Interfaces";
 
-export class SceneManager {
+export class SceneManager implements IRTLSPollingObserver, IServerPollingObserver {
   private scene: Scene;
   private cameraManager: CameraManager;
 
@@ -19,6 +20,17 @@ export class SceneManager {
     this.cameraManager = new CameraManager();
     this.scene = new Scene();
     this.udmManager = new UdmManager();
+  }
+
+  public onServerPolling(response: ServerPollingResponse): void {
+    this.handleHighlightedUdms(response.highlightedUdms);  
+    this.handleInformationToShow(response.informationToShow);
+    this.handleLoadedUdms(response.loadedUdms);
+    this.handleNearestUdms(response.nearestUdms);
+  }
+
+  public onRTLSPolling(response: RTLSPollingResponse): void {
+    this.moveForklift(response.position);
   }
 
   public init(): void {
@@ -36,7 +48,7 @@ export class SceneManager {
     this.scene.init(getCamera);
   }
 
-  public handleNearestUdms(nearestUdms: NearestUdm[]): void {
+  private handleNearestUdms(nearestUdms: NearestUdm[]): void {
     this.udmManager.readNearest(nearestUdms).then((udms) => {
       udms.forEach((udm) => {
         this.scene.addToScene(udm);
@@ -52,12 +64,11 @@ export class SceneManager {
     });
   }
 
-  public handleHighlightedUdms(highlightedUdmIds: number[]): void {
+  private handleHighlightedUdms(highlightedUdmIds: number[]): void {
     this.udmManager.readHighlighted(highlightedUdmIds);
-
   }
 
-  public handleLoadedUdms(loadedUdmIds: number[]): void {
+  private handleLoadedUdms(loadedUdmIds: number[]): void {
     this.udmManager.readLoaded(loadedUdmIds).then((udmToLoad) => {
       this.forklift.then((forklift) => {
         forklift.unloadFork();
@@ -66,7 +77,7 @@ export class SceneManager {
     });
   }
 
-  public handleInformationToShow(informationToShow : InformationToShow[]) : void{
+  private handleInformationToShow(informationToShow : InformationToShow[]) : void{
     
   }
 
@@ -74,7 +85,7 @@ export class SceneManager {
     this.scene.addToScene(object);
   }
 
-  public moveForklift(json: positionInformation): void {
+  private moveForklift(json: positionInformation): void {
     this.forklift.then(forklift => {
       forklift.setSmoothMoveTo(new Point3d(json.x, json.y, 0), json.orientation, json.forkHeight, 500);
     })
