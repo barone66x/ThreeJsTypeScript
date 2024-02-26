@@ -515,31 +515,26 @@ export class RTLSCommunicator implements IRTLSCommunicator {
     });
   }
   notifyPolling(response: RTLSPollingResponse): void {
-    this.pollingObservers.forEach(obs =>{
+    this.pollingObservers.forEach((obs) => {
       obs.onRTLSPolling(response);
     });
   }
 
-
   async pollingRequest(request: RTLSPollingRequest): Promise<RTLSPollingResponse> {
-    try{
+    try {
       const json = (await (await fetch("https://localhost:7157/Forklift/GetPosition")).json()) as RTLSPollingResponse;
       this.notifyPolling(json);
       if (this.isConnectionUp == false) {
         this.notifyConnectionUp();
         this.isConnectionUp = true;
-
       }
       return json;
-    } catch(error){
+    } catch (error) {
       if (this.isConnectionUp == true) {
         this.notifyConnectionDown();
         this.isConnectionUp = false;
       }
-      throw Error("Connection Error with RTLS")
+      throw Error("Connection Error with RTLS");
     }
-    
-   
-
   }
 }
